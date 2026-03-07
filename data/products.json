@@ -23,10 +23,5 @@
     { "id": 402, "name": "Mesa Auxiliar Metal",     "image": "./img/260219_metal_trend.jpg", "price": 89.00 },
     { "id": 403, "name": "Estantería Pino Natural", "image": "./img/estanteria_pino.png", "price": 199.00 },
     { "id": 404, "name": "Silla Ratán Blanca",      "image": "./img/silla_ratan.png", "price": 149.00 }
-  ],
-  "fragancias": [
-    { "id": 501, "name": "Sérum Facial Mineral",    "image": "./img/cosmetica_01.jpg", "price": 39.95 },
-    { "id": 502, "name": "Difusor Musgo Blanco",    "image": "https://images.unsplash.com/photo-1602523961358-f9f03dd557db?w=600&h=800&fit=crop&q=80", "price": 29.95 },
-    { "id": 503, "name": "Vela Cedro & Ámbar",      "image": "https://images.unsplash.com/photo-1603006905003-be475563bc59?w=600&h=800&fit=crop&q=80", "price": 24.95 }
   ]
 }
