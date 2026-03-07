@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Toalla de baño",
+    "material": "Algodón Waffle",
+    "price": 19.99,
+    "color": ["Blanco","Arena","Gris","Verde"],
+    "image": "blanco.png"
+  },
+  {
+    "id": 2,
+    "name": "Toalla baño estructura",
+    "material": "Algodón",
+    "price": 24.99,
+    "color": ["Azul","Rojo","Amarillo","Multicolor"],
+    "image": "cuadros.png"
+  },
+  {
+    "id": 3,
+    "name": "Toalla baño rizo lisa",
+    "material": "Algodón Egipcio",
+    "price": 14.99,
+    "color": ["Blanco","Gris","kaki","Arena"],
+    "image": "verde.png"
+  },
+  {
+    "id": 4,
+    "name": "Toalla baño estra suave",
+    "material": "Algodón Suave",
+    "price": 29.99,
+    "color": ["Negro","Blanco","Azul","Verde"],
+    "image": "marron.png"
+  },
+  {
+    "id": 5,
+    "name": "Toalla baño estra suave",
+    "material": "Algodón Suave",
+    "price": 29.99,
+    "color": ["Negro","Blanco","Azul","Verde"],
+    "image": "marron.png"
+  },
+  {
+    "id": 6,
+    "name": "Toalla baño estra suave",
+    "material": "Algodón Suave",
+    "price": 29.99,
+    "color": ["Negro","Blanco","Azul","Verde"],
+    "image": "marron.png"
+  },
+  {
+    "id": 7,
+    "name": "Toalla baño estra suave",
+    "material": "Algodón Suave",
+    "price": 29.99,
+    "color": ["Negro","Blanco","Azul","Verde"],
+    "image": "marron.png"
+  },
+  {
+    "id": 8,
+    "name": "Toalla baño estra suave",
+    "material": "Algodón Suave",
+    "price": 29.99,
+    "color": ["Negro","Blanco","Azul","Verde"],
+    "image": "marron.png"
+  }
+]
