@@ -56,16 +56,20 @@
       <!-- Header -->
     <header class="header" id="header">
       <div class="header-left">
-        <button class="menu-btn" id="menuBtn">
+         <!-- Botón hamburguesa de 3 rayitas -->
+         <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+          <span></span>
           <span></span>
           <span></span>
         </button>
       </div>
-      <div class="header-center">
-        <a href="/" class="logo">
+      
+        <div class="header-center">
+        <a href="#" class="logo">
           <span class="logo-text">ZARA HOME</span>
         </a>
       </div>
+        
       <div class="header-right">
         <button class="header-icon" aria-label="Account">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -89,8 +93,31 @@
           <span class="cart-count">(0)</span>
         </button>
       </div>
+
+      <!-- Menú desplegable (oculto inicialmente) -->
+        <div class="dropdown-menu" id="dropdownMenu">
+          <nav class="dropdown-nav">
+            <ul class="dropdown-list">
+              <li><a href="/novedades">NOVEDADES</a></li>
+              <li><a href="/dormitorio">DORMITORIO</a></li>
+              <li><a href="/decoracion">DECORACIÓN</a></li>
+              <li><a href="/muebles">MUEBLES</a></li>
+              <li><a href="/cocina-y-comedor">COCINA Y COMEDOR</a></li>
+              <li><a href="/bano">BAÑO</a></li>
+              <li><a href="/fragancias">FRAGANCIAS</a></li>
+              <li><a href="/ninos-y-bebes">NIÑOS Y BEBÉS</a></li>
+              <li><a href="/special-prices">SPECIAL PRICES</a></li>
+              <li class="dropdown-divider"></li>
+              <li><a href="/ayuda">AYUDA</a></li>
+              <li><a href="/contacto">CONTACTO</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
     </header>
 
+<!-- Overlay -->
+<div class="menu-overlay hidden" id="menuOverlay"></div>
 
     <!-- Main Content -->
     <main class="main">
@@ -156,7 +183,7 @@
         <div class="products-grid">
           <article class="product-card">
             <div class="product-image-wrapper">
-              <img src="https://static.zarahome.net/assets/public/3c9d/dae0/b78c4e5e852c/ad1015aa0e5f/46371000802-p1/46371000802-p1.jpg?ts=1744021965534&f=auto&w=680" alt="Ceramic vase" class="product-image" />
+              <img src="./img/baños.png" alt="Baños" class="product-image" />
               <button class="product-wishlist">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -164,13 +191,13 @@
               </button>
             </div>
             <div class="product-info">
-              <h3 class="product-name">Jarrón cerámica artesanal</h3>
-              <p class="product-price">39,99 EUR</p>
+              <h3 class="product-name">Baños</h3>
+            
             </div>
           </article>
           <article class="product-card">
             <div class="product-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?w=600&h=800&fit=crop&q=80" alt="Scented candle" class="product-image" />
+              <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?w=600&h=800&fit=crop&q=80" alt="Decoración" class="product-image" />
               <button class="product-wishlist">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -178,13 +205,12 @@
               </button>
             </div>
             <div class="product-info">
-              <h3 class="product-name">Vela perfumada sándalo</h3>
-              <p class="product-price">25,99 EUR</p>
+              <h3 class="product-name">Decoración</h3>
             </div>
           </article>
           <article class="product-card">
             <div class="product-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1616627561839-074385245ff6?w=600&h=800&fit=crop&q=80" alt="Linen bedding" class="product-image" />
+              <img src="https://images.unsplash.com/photo-1616627561839-074385245ff6?w=600&h=800&fit=crop&q=80" alt="Dormitorio" class="product-image" />
               <button class="product-wishlist">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -192,13 +218,12 @@
               </button>
             </div>
             <div class="product-info">
-              <h3 class="product-name">Funda nórdica lino lavado</h3>
-              <p class="product-price">89,99 EUR</p>
+              <h3 class="product-name">Dormitorio</h3>
             </div>
           </article>
           <article class="product-card">
             <div class="product-image-wrapper">
-              <img src="https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=600&h=800&fit=crop&q=80" alt="Modern lamp" class="product-image" />
+              <img src="./img/muebles.png" alt="Muebles" class="product-image" />
               <button class="product-wishlist">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -206,8 +231,7 @@
               </button>
             </div>
             <div class="product-info">
-              <h3 class="product-name">Lámpara diseño minimalista</h3>
-              <p class="product-price">119,00 EUR</p>
+              <h3 class="product-name">Muebles</h3>
             </div>
           </article>
         </div>
