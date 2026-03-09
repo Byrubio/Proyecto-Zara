@@ -59,6 +59,16 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* ensure scroll is always available (Chrome/Firefox) */
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+html {
+  /* some browsers need explicit scroll property */
+  overflow-y: auto;
+  height: auto;
 }
 
 /* =========================
@@ -1115,6 +1125,26 @@ body.menu-open {
 .cart-item-price {
   font-weight: 600;
   margin-top: 4px;
+}
+
+/* botón de eliminar en el carrito */
+.remove-cart-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  transition: color var(--transition-fast);
+}
+
+.remove-cart-btn:hover {
+  color: #000;
+}
+
+.remove-cart-btn:focus {
+  outline: 2px solid var(--color-accent);
 }
 
 .cart-empty {

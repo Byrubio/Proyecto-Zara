@@ -1,3 +1,5 @@
+console.log("app.js cargado");
+
 /*COMPORTAMIENTO HAMBURGUESAS*/
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const dropdownMenu = document.getElementById("dropdownMenu");
@@ -169,34 +171,51 @@ const STORAGE_KEY = "zarahome_modal_dismissed";
 /*PRODUCTOS DE BAÑO*/
 let allBathProducts = []; // Almacenar todos los productos
 
-if (window.location.pathname.includes("banos.html")) {
-  console.log("Cargando productos de baño...");
-  cargarProductosBano();
-}
+// Detectar y cargar productos de baño si el elemento existe en la página
+document.addEventListener("DOMContentLoaded", function() {
+  const contenedorBano = document.getElementById("contenedor-baño");
+  console.log("Contenedor baño encontrado:", contenedorBano);
+  if (contenedorBano) {
+    console.log("Página de baños detectada. Cargando productos...");
+    cargarProductosBano();
+  } else {
+    console.log("Contenedor de baño no encontrado");
+  }
+});
 
 function cargarProductosBano() {
-  fetch("data/banos.json")
+  console.log("Iniciando carga de productos de baño...");
+  fetch("./data/banos.json")
     .then((res) => {
+      console.log("Respuesta del fetch:", res);
       if (!res.ok) throw new Error("No se encuentra el JSON");
       return res.json();
     })
     .then((productos) => {
+      console.log("Productos cargados:", productos.length);
       allBathProducts = productos;
       renderBathProducts(productos);
       initBathSearchAndFilters();
     })
-    .catch((err) => console.error("Error:", err));
+    .catch((err) => console.error("Error cargando productos:", err));
 }
 
 // RENDERIZAR productos de baño
 function renderBathProducts(productArray) {
   const contenedor = document.querySelector("#contenedor-baño");
-  if (!contenedor) return;
+  console.log("Renderizando productos. Contenedor:", contenedor);
+  console.log("Productos a renderizar:", productArray.length);
+  if (!contenedor) {
+    console.error("Contenedor #contenedor-baño no encontrado");
+    return;
+  }
 
   contenedor.innerHTML = ""; // Limpiar
+  console.log("Contenedor limpiado");
 
   if (productArray.length === 0) {
     contenedor.innerHTML = "<p class='no-products'>No se encontraron productos</p>";
+    console.log("No hay productos para mostrar");
     return;
   }
 
@@ -205,12 +224,12 @@ function renderBathProducts(productArray) {
   productArray.forEach((product) => {
     const card = document.createElement("div");
     card.className = "producto-card";
-    const isFavorite = favorites.includes(product.id);
+    const isFavorite = favorites.some((f) => f.id === product.id);
     const heartClass = isFavorite ? "filled" : "";
 
     card.innerHTML = `
       <div class="image-wrapper">
-        <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}">
+        <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}" data-product-name="${product.nombre}">
           ♥
         </button>
         <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
@@ -241,7 +260,8 @@ function renderBathProducts(productArray) {
   document.querySelectorAll(".wishlist-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const productId = parseInt(e.currentTarget.dataset.productId);
-      toggleFavorite(productId, e.currentTarget);
+      const productName = e.currentTarget.dataset.productName;
+      toggleFavorite(productId, productName, e.currentTarget);
     });
   });
 }
@@ -271,6 +291,17 @@ function addToBathCart(productId, productName, productPrice) {
   showAddedToCartMessage(productName);
 }
 
+// Eliminar un producto del carrito (completo)
+function removeFromBathCart(productId) {
+  let cart = getCart();
+  const index = cart.findIndex((item) => item.id === productId);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    saveCart(cart);
+    updateCartDisplayAll();
+  }
+}
+
 // Obtener carrito del localStorage
 function getCart() {
   try {
@@ -282,10 +313,13 @@ function getCart() {
   }
 }
 
-// Guardar carrito en localStorage
+// Guardar carrito en localStorage (también sincroniza clave general)
 function saveCart(cart) {
   try {
+    // key específico para productos de baño
     localStorage.setItem("zarahome_bath_cart", JSON.stringify(cart));
+    // key genérica usada por el contador de cabecera
+    localStorage.setItem("zarahome_cart", JSON.stringify(cart));
   } catch (e) {
     console.error("Error al guardar carrito:", e);
   }
@@ -295,7 +329,13 @@ function saveCart(cart) {
 function getFavorites() {
   try {
     const favorites = localStorage.getItem("zarahome_bath_favorites");
-    return favorites ? JSON.parse(favorites) : [];
+    const parsed = favorites ? JSON.parse(favorites) : [];
+    // compatibilidad con versiones antiguas (solo names como strings)
+    if (parsed.length && typeof parsed[0] === "string") {
+      // convertir strings a objetos con solo nombre
+      return parsed.map((name) => ({ name }));
+    }
+    return parsed;
   } catch (e) {
     console.error("Error al obtener favoritos:", e);
     return [];
@@ -305,21 +345,24 @@ function getFavorites() {
 // Guardar favoritos en localStorage
 function saveFavorites(favorites) {
   try {
-    localStorage.setItem("zarahome_bath_favorites", JSON.stringify(favorites));
+    // Guardar solo los nombres como strings
+    const names = favorites.map((f) => f.name);
+    localStorage.setItem("zarahome_bath_favorites", JSON.stringify(names));
   } catch (e) {
     console.error("Error al guardar favoritos:", e);
   }
 }
 
 // Alternar favorito
-function toggleFavorite(productId, buttonElement) {
+function toggleFavorite(productId, productName, buttonElement) {
   let favorites = getFavorites();
-
-  if (favorites.includes(productId)) {
-    favorites = favorites.filter((id) => id !== productId);
+  const idx = favorites.findIndex((f) => f.name === productName);
+  if (idx !== -1) {
+    // ya está como favorito -> eliminar
+    favorites.splice(idx, 1);
     buttonElement.classList.remove("filled");
   } else {
-    favorites.push(productId);
+    favorites.push({ id: productId, name: productName });
     buttonElement.classList.add("filled");
   }
 
@@ -399,6 +442,7 @@ function renderCartDropdown() {
           <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)} €</div>
         </div>
       </div>
+      <button class="remove-cart-btn" data-product-id="${item.id}" title="Eliminar">&times;</button>
     `;
     cartItems.appendChild(cartItem);
   });
@@ -433,6 +477,16 @@ function renderCartDropdown() {
       !cartDropdown.contains(e.target)
     ) {
       cartDropdown.classList.add("hidden");
+    }
+  });
+
+  // Delegate remove button clicks inside dropdown
+  cartDropdown.addEventListener("click", (e) => {
+    if (e.target.matches(".remove-cart-btn")) {
+      // evitar que el evento burbujee hasta document y cierre el dropdown
+      e.stopPropagation();
+      const id = parseInt(e.target.dataset.productId);
+      removeFromBathCart(id);
     }
   });
 
