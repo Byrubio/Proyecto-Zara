@@ -1,352 +1,614 @@
-/* ─── ZARA HOME · app.js ─────────────────────────────────────────── */
+/*COMPORTAMIENTO HAMBURGUESAS*/
+const hamburgerBtn = document.getElementById("hamburger-btn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+const menuOverlay = document.getElementById("menuOverlay");
 
-// ── Estado ─────────────────────────────────────────────────────────
-const cart     = JSON.parse(localStorage.getItem('zh_cart')     || '[]');
-const wishlist = JSON.parse(localStorage.getItem('zh_wishlist') || '[]');
-let   allProducts = {};       // datos del JSON, por categoría
-let   activeCategory = null;  // categoría visible actualmente
+if (hamburgerBtn && dropdownMenu && menuOverlay) {
+  hamburgerBtn.addEventListener("click", () => {
+    dropdownMenu.classList.toggle("active");
+    menuOverlay.classList.toggle("hidden");
+    hamburgerBtn.classList.toggle("active");
+    document.body.classList.toggle("menu-open");
+  });
 
-const save = () => {
-  localStorage.setItem('zh_cart',     JSON.stringify(cart));
-  localStorage.setItem('zh_wishlist', JSON.stringify(wishlist));
-};
+  menuOverlay.addEventListener("click", () => {
+    dropdownMenu.classList.remove("active");
+    menuOverlay.classList.add("hidden");
+    hamburgerBtn.classList.remove("active");
+    document.body.classList.remove("menu-open");
+  });
+}
 
-// ── Toast ──────────────────────────────────────────────────────────
-function toast(msg) {
-  let el = document.getElementById('zh-toast');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'zh-toast';
-    Object.assign(el.style, {
-      position:'fixed', bottom:'28px', left:'50%',
-      transform:'translateX(-50%) translateY(60px)',
-      background:'#1a1a1a', color:'#fff', padding:'11px 22px',
-      fontSize:'.72rem', letterSpacing:'.12em', textTransform:'uppercase',
-      fontFamily:'"Manrope",sans-serif', transition:'transform .3s ease',
-      zIndex:'9999', pointerEvents:'none', whiteSpace:'nowrap'
-    });
-    document.body.appendChild(el);
+// =========================
+// CONSTANTS & CONFIG
+// =========================
+const STORAGE_KEY = "zarahome_modal_dismissed";
+
+// =========================
+// MODAL FUNCTIONALITY
+// =========================
+(function initModal() {
+  const countryModal = document.getElementById("countryModal");
+  const modalClose = document.getElementById("modalClose");
+  const continueBtn = document.getElementById("continueBtn");
+
+  // Early return if modal doesn't exist
+  if (!countryModal) return;
+
+  function closeModal() {
+    countryModal.classList.add("hidden");
+    localStorage.setItem(STORAGE_KEY, "true");
+    document.body.style.overflow = "";
   }
-  el.textContent = msg;
-  el.style.transform = 'translateX(-50%) translateY(0)';
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.style.transform = 'translateX(-50%) translateY(60px)', 2400);
+
+  function openModal() {
+    const modalDismissed = localStorage.getItem(STORAGE_KEY);
+    if (!modalDismissed) {
+      countryModal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  // Initialize modal
+  openModal();
+
+  // Event listeners
+  modalClose?.addEventListener("click", closeModal);
+  continueBtn?.addEventListener("click", closeModal);
+
+  // Close when clicking outside
+  countryModal.addEventListener("click", (e) => {
+    if (e.target === countryModal) closeModal();
+  });
+
+  // Close with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !countryModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+})();
+
+// =========================
+// HEADER SCROLL EFFECT
+// =========================
+(function initHeaderScroll() {
+  const header = document.getElementById("header");
+
+  if (!header) return;
+
+  let ticking = false;
+  const SCROLL_THRESHOLD = 50;
+
+  function updateHeader() {
+    header.classList.toggle("scrolled", window.scrollY > SCROLL_THRESHOLD);
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  });
+
+  // Check initial scroll position
+  updateHeader();
+})();
+
+// =========================
+// HERO IMAGE SWAP & PRELOAD
+// =========================
+(function initHero() {
+  const heroImage = document.querySelector(".hero-image");
+  const heroNavLinks = document.querySelectorAll(".hero-nav-link");
+  const heroNavContainer = document.querySelector(".hero-nav");
+
+  // Early return if hero elements don't exist
+  if (!heroImage || !heroNavLinks.length) return;
+
+  // Preload all hero images
+  heroNavLinks.forEach((link) => {
+    const imgUrl = link.dataset.image;
+    if (imgUrl) {
+      const preload = new Image();
+      preload.src = imgUrl;
+    }
+  });
+
+  // Function to update hero image
+  function updateHeroImage(clickedLink) {
+    // Update active states
+    heroNavLinks.forEach((link) => link.classList.remove("active"));
+    clickedLink.classList.add("active");
+
+    // Update image with fade effect
+    const imgUrl = clickedLink.dataset.image;
+    if (imgUrl && heroImage.src !== imgUrl) {
+      // Add fade-out effect
+      heroImage.style.opacity = "0.5";
+
+      setTimeout(() => {
+        heroImage.src = imgUrl;
+        heroImage.style.opacity = "1";
+      }, 150);
+    }
+  }
+
+  // Add click handlers
+  heroNavLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      updateHeroImage(link);
+    });
+  });
+
+  // Add keyboard navigation
+  if (heroNavContainer) {
+    heroNavContainer.addEventListener("keydown", (e) => {
+      const currentActive = document.querySelector(".hero-nav-link.active");
+      const links = Array.from(heroNavLinks);
+      const currentIndex = links.indexOf(currentActive);
+
+      let newIndex;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        newIndex = (currentIndex + 1) % links.length;
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        newIndex = (currentIndex - 1 + links.length) % links.length;
+      } else {
+        return;
+      }
+
+      links[newIndex].focus();
+      updateHeroImage(links[newIndex]);
+    });
+  }
+})();
+/*PRODUCTOS DE BAÑO*/
+let allBathProducts = []; // Almacenar todos los productos
+
+if (window.location.pathname.includes("banos.html")) {
+  console.log("Cargando productos de baño...");
+  cargarProductosBano();
 }
 
-// ── Carrito ────────────────────────────────────────────────────────
-function updateCartBadge() {
-  const n = cart.reduce((s, i) => s + i.qty, 0);
-  document.querySelector('.cart-count').textContent = n ? `(${n})` : '';
+function cargarProductosBano() {
+  fetch("data/banos.json")
+    .then((res) => {
+      if (!res.ok) throw new Error("No se encuentra el JSON");
+      return res.json();
+    })
+    .then((productos) => {
+      allBathProducts = productos;
+      renderBathProducts(productos);
+      initBathSearchAndFilters();
+    })
+    .catch((err) => console.error("Error:", err));
 }
 
-function addToCart(id, name, price, img) {
-  const item = cart.find(i => i.id === id);
-  item ? item.qty++ : cart.push({ id, name, price, img, qty: 1 });
-  save();
-  updateCartBadge();
-  toast(`${name} añadido`);
-}
+// RENDERIZAR productos de baño
+function renderBathProducts(productArray) {
+  const contenedor = document.querySelector("#contenedor-baño");
+  if (!contenedor) return;
 
-function removeFromCart(id) {
-  const i = cart.findIndex(x => x.id === id);
-  if (i !== -1) cart.splice(i, 1);
-  save();
-  updateCartBadge();
-  renderCartDrawer();
-}
+  contenedor.innerHTML = ""; // Limpiar
 
-function changeQty(id, delta) {
-  const item = cart.find(i => i.id === id);
-  if (!item) return;
-  item.qty += delta;
-  if (item.qty <= 0) return removeFromCart(id);
-  save();
-  renderCartDrawer();
-}
-
-// ── Drawer del carrito ─────────────────────────────────────────────
-function openCartDrawer() {
-  renderCartDrawer();
-  document.getElementById('cartDrawer').classList.add('open');
-  document.getElementById('cartOverlay').classList.add('open');
-}
-
-function closeCartDrawer() {
-  document.getElementById('cartDrawer').classList.remove('open');
-  document.getElementById('cartOverlay').classList.remove('open');
-}
-
-function renderCartDrawer() {
-  const body  = document.getElementById('cartBody');
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-
-  if (!cart.length) {
-    body.innerHTML = `<p style="padding:40px 24px;text-align:center;color:#999;
-      font-size:.8rem;letter-spacing:.1em;text-transform:uppercase">Tu carrito está vacío</p>`;
-    document.getElementById('cartTotal').textContent = '';
+  if (productArray.length === 0) {
+    contenedor.innerHTML = "<p class='no-products'>No se encontraron productos</p>";
     return;
   }
 
-  body.innerHTML = cart.map(i => `
-    <div style="display:grid;grid-template-columns:72px 1fr auto;gap:14px;
-                padding:16px 24px;border-bottom:1px solid #f0f0f0">
-      <img src="${i.img}" style="width:72px;aspect-ratio:3/4;object-fit:cover;background:#f5f5f5">
-      <div>
-        <p style="font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">${i.name}</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <button onclick="changeQty(${i.id},-1)"
-            style="width:22px;height:22px;border:1px solid #e5e5e5;background:none;cursor:pointer">−</button>
-          <span style="font-size:.8rem">${i.qty}</span>
-          <button onclick="changeQty(${i.id},+1)"
-            style="width:22px;height:22px;border:1px solid #e5e5e5;background:none;cursor:pointer">+</button>
-        </div>
-      </div>
-      <div style="text-align:right">
-        <p style="font-size:.8rem;margin-bottom:8px">${(i.price * i.qty).toFixed(2)} €</p>
-        <button onclick="removeFromCart(${i.id})"
-          style="background:none;border:none;cursor:pointer;font-size:.65rem;
-                 letter-spacing:.1em;text-transform:uppercase;color:#999">Eliminar</button>
-      </div>
-    </div>
-  `).join('');
+  const favorites = getFavorites();
 
-  document.getElementById('cartTotal').textContent = `Total: ${total.toFixed(2)} €`;
-}
+  productArray.forEach((product) => {
+    const card = document.createElement("div");
+    card.className = "producto-card";
+    const isFavorite = favorites.includes(product.id);
+    const heartClass = isFavorite ? "filled" : "";
 
-// ── Wishlist ───────────────────────────────────────────────────────
-function toggleWishlist(id, btn) {
-  const idx = wishlist.indexOf(id);
-  const path = btn.querySelector('path');
-  if (idx === -1) {
-    wishlist.push(id);
-    path.setAttribute('fill', 'currentColor');
-    toast('Guardado en favoritos ♥');
-  } else {
-    wishlist.splice(idx, 1);
-    path.setAttribute('fill', 'none');
-    toast('Eliminado de favoritos');
-  }
-  save();
-}
-
-// ── Render del grid de productos ───────────────────────────────────
-function renderProducts(category) {
-  activeCategory = category;
-  const products = allProducts[category] || [];
-  const grid = document.querySelector('.products-grid');
-
-  grid.innerHTML = products.map(p => `
-    <article class="product-card">
-      <div class="product-image-wrapper">
-        <img src="${p.image}" alt="${p.name}" class="product-image"
-             onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=800&fit=crop&q=80'">
-
-        <button class="product-wishlist" onclick="toggleWishlist(${p.id}, this)">
-          <svg width="16" height="16" viewBox="0 0 24 24"
-               fill="${wishlist.includes(p.id) ? 'currentColor' : 'none'}"
-               stroke="currentColor" stroke-width="1.5">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                     2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
-                     C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
-                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
+    card.innerHTML = `
+      <div class="image-wrapper">
+        <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}">
+          ♥
         </button>
-
-        <button class="add-cart-btn"
-                onclick="addToCart(${p.id},'${p.name}',${p.price},'${p.image}')">
+        <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
+      </div>
+      <div class="info">
+        <h3>${product.nombre}</h3>
+        <p class="precio">${product.precio.toFixed(2)} €</p>
+        <button class="add-cart-btn" data-product-id="${product.id}" data-product-name="${product.nombre}" data-product-price="${product.precio}">
           Añadir al carrito
         </button>
       </div>
-      <div class="product-info">
-        <h3 class="product-name">${p.name}</h3>
-        <p class="product-price">${p.price.toFixed(2)} €</p>
+    `;
+
+    contenedor.appendChild(card);
+  });
+
+  // Agregar event listeners a los botones
+  document.querySelectorAll(".add-cart-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const productId = parseInt(e.target.dataset.productId);
+      const productName = e.target.dataset.productName;
+      const productPrice = parseFloat(e.target.dataset.productPrice);
+      addToBathCart(productId, productName, productPrice);
+    });
+  });
+
+  // Agregar event listeners a los botones de favoritos
+  document.querySelectorAll(".wishlist-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const productId = parseInt(e.currentTarget.dataset.productId);
+      toggleFavorite(productId, e.currentTarget);
+    });
+  });
+}
+
+// Función para agregar al carrito
+function addToBathCart(productId, productName, productPrice) {
+  let cart = getCart();
+
+  // Buscar si el producto ya está en el carrito
+  const existingProduct = cart.find((item) => item.id === productId);
+
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({
+      id: productId,
+      name: productName,
+      price: productPrice,
+      quantity: 1,
+    });
+  }
+
+  saveCart(cart);
+  updateCartDisplayAll();
+
+  // Mostrar feedback visual
+  showAddedToCartMessage(productName);
+}
+
+// Obtener carrito del localStorage
+function getCart() {
+  try {
+    const cart = localStorage.getItem("zarahome_bath_cart");
+    return cart ? JSON.parse(cart) : [];
+  } catch (e) {
+    console.error("Error al obtener carrito:", e);
+    return [];
+  }
+}
+
+// Guardar carrito en localStorage
+function saveCart(cart) {
+  try {
+    localStorage.setItem("zarahome_bath_cart", JSON.stringify(cart));
+  } catch (e) {
+    console.error("Error al guardar carrito:", e);
+  }
+}
+
+// Obtener favoritos del localStorage
+function getFavorites() {
+  try {
+    const favorites = localStorage.getItem("zarahome_bath_favorites");
+    return favorites ? JSON.parse(favorites) : [];
+  } catch (e) {
+    console.error("Error al obtener favoritos:", e);
+    return [];
+  }
+}
+
+// Guardar favoritos en localStorage
+function saveFavorites(favorites) {
+  try {
+    localStorage.setItem("zarahome_bath_favorites", JSON.stringify(favorites));
+  } catch (e) {
+    console.error("Error al guardar favoritos:", e);
+  }
+}
+
+// Alternar favorito
+function toggleFavorite(productId, buttonElement) {
+  let favorites = getFavorites();
+
+  if (favorites.includes(productId)) {
+    favorites = favorites.filter((id) => id !== productId);
+    buttonElement.classList.remove("filled");
+  } else {
+    favorites.push(productId);
+    buttonElement.classList.add("filled");
+  }
+
+  saveFavorites(favorites);
+}
+
+// Actualizar la pantalla del carrito
+function updateCartDisplayAll() {
+  const cart = getCart();
+  const cartItemCount = document.getElementById("cartItemCount");
+  const cartTotal = document.getElementById("cartTotal");
+  const cartCountHeader = document.getElementById("cartCount");
+
+  if (cartItemCount && cartTotal) {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    cartItemCount.textContent = totalItems;
+    cartTotal.textContent = totalPrice.toFixed(2);
+  }
+
+  // Actualizar contador en el header (si existe en la página)
+  if (cartCountHeader) {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountHeader.textContent = totalItems > 0 ? `(${totalItems})` : "";
+  }
+
+  // Renderizar el dropdown del carrito
+  renderCartDropdown();
+}
+
+// Renderizar el dropdown del carrito
+function renderCartDropdown() {
+  const cartItems = document.getElementById("cartItems");
+  const totalAmount = document.getElementById("totalAmount");
+  const cart = getCart();
+
+  if (!cartItems || !totalAmount) return;
+
+  // Si el carrito está vacío
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
+    totalAmount.textContent = "0.00 €";
+    return;
+  }
+
+  // Limpiar items
+  cartItems.innerHTML = "";
+
+  let totalPrice = 0;
+
+  // Renderizar cada producto
+  cart.forEach((item) => {
+    const itemTotal = item.price * item.quantity;
+    totalPrice += itemTotal;
+
+    // Buscar imagen del producto
+    let productImage = "./img/placeholder.png";
+    if (typeof allBathProducts !== "undefined" && allBathProducts.length > 0) {
+      const product = allBathProducts.find((p) => p.id === item.id);
+      if (product && product.imagen) {
+        productImage = product.imagen;
+      }
+    }
+
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
+    cartItem.innerHTML = `
+      <img src="${productImage}" alt="${item.name}" class="cart-item-image">
+      <div class="cart-item-info">
+        <h4 class="cart-item-name">${item.name}</h4>
+        <div class="cart-item-details">
+          <div class="cart-item-quantity">Cantidad: <strong>${item.quantity}</strong></div>
+          <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)} €</div>
+        </div>
       </div>
-    </article>
-  `).join('');
-
-  // Hover: mostrar botón "añadir"
-  grid.querySelectorAll('.product-card').forEach(card => {
-    const btn = card.querySelector('.add-cart-btn');
-    card.addEventListener('mouseenter', () => btn.style.opacity = '1');
-    card.addEventListener('mouseleave', () => btn.style.opacity = '0');
+    `;
+    cartItems.appendChild(cartItem);
   });
+
+  // Actualizar total
+  totalAmount.textContent = totalPrice.toFixed(2) + " €";
 }
 
-// ── Nav del hero: cambio de imagen + categoría activa ──────────────
-function initHeroNav() {
-  const heroImg = document.getElementById('heroImage');
+// Inicializar el carrito desplegable
+(function initCartDropdown() {
+  const cartIcon = document.getElementById("cartIcon");
+  const cartDropdown = document.getElementById("cartDropdown");
+  const cartClose = document.getElementById("cartClose");
 
-  // Mapa enlace → categoría del JSON
-  const linkToCategory = {
-    'novedades':         'bano',
-    'metal-trend':       'muebles',
-    'gym-collection':    'decoracion',
-    'vincent-van-duysen':'dormitorio'
-  };
+  if (!cartIcon || !cartDropdown) return;
 
-  document.querySelectorAll('.hero-nav-link').forEach(link => {
-    link.addEventListener('mouseenter', () => {
-      // Cambiar imagen con fade
-      heroImg.style.opacity = '0';
-      setTimeout(() => { heroImg.src = link.dataset.image; heroImg.style.opacity = '1'; }, 200);
+  // Toggle cart dropdown
+  cartIcon.addEventListener("click", (e) => {
+    e.stopPropagation();
+    cartDropdown.classList.toggle("hidden");
+  });
 
-      // Marcar activo
-      document.querySelectorAll('.hero-nav-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
+  // Close cart dropdown
+  cartClose?.addEventListener("click", () => {
+    cartDropdown.classList.add("hidden");
+  });
+
+  // Close cart when clicking outside
+  document.addEventListener("click", (e) => {
+    if (
+      !cartIcon.contains(e.target) &&
+      !cartDropdown.contains(e.target)
+    ) {
+      cartDropdown.classList.add("hidden");
+    }
+  });
+
+  // Close cart with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !cartDropdown.classList.contains("hidden")) {
+      cartDropdown.classList.add("hidden");
+    }
+  });
+
+  // Renderizar el carrito al iniciar
+  renderCartDropdown();
+})();
+
+// Mostrar mensaje de producto añadido
+function showAddedToCartMessage(productName) {
+  const message = document.createElement("div");
+  message.className = "cart-message";
+  message.textContent = `${productName} añadido al carrito`;
+  document.body.appendChild(message);
+
+  setTimeout(() => {
+    message.remove();
+  }, 2000);
+}
+
+// Inicializar búsqueda y filtros
+function initBathSearchAndFilters() {
+  const searchInput = document.getElementById("searchInput");
+  if (!searchInput) return;
+
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+
+    const filtered = allBathProducts.filter((product) =>
+      product.nombre.toLowerCase().includes(searchTerm),
+    );
+
+    renderBathProducts(filtered);
+  });
+
+  // Actualizar pantalla del carrito al cargar
+  updateCartDisplayAll();
+}
+
+// =========================
+// MOBILE MENU FUNCTIONALITY
+// =========================
+(function initMobileMenu() {
+  const menuBtn = document.getElementById("menuBtn");
+  const dropdownMenu = document.querySelector(".dropdown-menu");
+
+  if (!menuBtn || !dropdownMenu) return;
+
+  let isMenuOpen = false;
+
+  function toggleMenu(open = !isMenuOpen) {
+    isMenuOpen = open;
+    dropdownMenu.classList.toggle("active", isMenuOpen);
+    menuBtn.classList.toggle("active", isMenuOpen);
+    menuBtn.setAttribute("aria-expanded", isMenuOpen);
+
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+  }
+
+  menuBtn.addEventListener("click", () => toggleMenu());
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (
+      isMenuOpen &&
+      !menuBtn.contains(e.target) &&
+      !dropdownMenu.contains(e.target)
+    ) {
+      toggleMenu(false);
+    }
+  });
+
+  // Close menu with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isMenuOpen) {
+      toggleMenu(false);
+      menuBtn.focus();
+    }
+  });
+
+  // Close menu when clicking on a link
+  dropdownMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => toggleMenu(false));
+  });
+})();
+
+// =========================
+// CART COUNTER FUNCTIONALITY
+// =========================
+(function initCart() {
+  const cartBtn = document.querySelector(".cart-icon");
+  const cartCount = document.getElementById("cartCount");
+
+  if (!cartBtn || !cartCount) return;
+
+  // Example: Get cart count from localStorage or initialize to 0
+  function updateCartCount() {
+    let count = 0;
+    try {
+      const cartData = localStorage.getItem("zarahome_cart");
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        count = cart.length || 0;
+      }
+    } catch (e) {
+      console.warn("Could not parse cart data");
+    }
+
+    cartCount.textContent = count > 0 ? `(${count})` : "";
+    cartCount.setAttribute(
+      "aria-label",
+      count === 0
+        ? "Carrito vacío"
+        : `${count} producto${count !== 1 ? "s" : ""} en el carrito`,
+    );
+  }
+
+  // Initial update
+  updateCartCount();
+
+  // Optional: Listen for storage changes (if cart is modified in another tab)
+  window.addEventListener("storage", (e) => {
+    if (e.key === "zarahome_cart") {
+      updateCartCount();
+    }
+  });
+})();
+
+// =========================
+// UTILITIES & PERFORMANCE
+// =========================
+(function initUtils() {
+  // Add touch support detection class
+  if ("ontouchstart" in window) {
+    document.documentElement.classList.add("touch");
+  }
+
+  // Lazy load images (if not using native loading)
+  if ("loading" in HTMLImageElement.prototype) {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    images.forEach((img) => {
+      img.setAttribute("loading", "lazy");
     });
+  }
 
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const key = link.getAttribute('href').replace('/', '');
-      const cat = linkToCategory[key] || 'bano';
-      renderProducts(cat);
-      document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-}
+  // Smooth scroll for anchor links (if any)
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      if (href === "#") return;
 
-// ── Header scroll ──────────────────────────────────────────────────
-function initHeader() {
-  const header = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 10);
-  }, { passive: true });
-}
-
-// ── Menú hamburguesa ──────────────────────────────────────────────
-function initMenu() {
-  const btn     = document.getElementById('hamburgerBtn');
-  const menu    = document.getElementById('dropdownMenu');
-  const overlay = document.getElementById('menuOverlay');
-
-  const close = () => {
-    menu.classList.remove('active');
-    btn.classList.remove('active');
-    overlay.classList.remove('show');
-    overlay.classList.add('hidden');
-    document.body.classList.remove('menu-open');
-  };
-
-  btn.addEventListener('click', () => {
-    const open = !menu.classList.contains('active');
-    open ? (menu.classList.add('active'), btn.classList.add('active'),
-            overlay.classList.remove('hidden'), overlay.classList.add('show'),
-            document.body.classList.add('menu-open'))
-         : close();
-  });
-
-  overlay.addEventListener('click', close);
-
-  // Los links del menú también cargan la categoría
-  const menuToCategory = {
-    '/bano':       'bano',
-    '/decoracion': 'decoracion',
-    '/dormitorio': 'dormitorio',
-    '/muebles':    'muebles',
-    '/fragancias': 'fragancias'
-  };
-
-  menu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const cat = menuToCategory[link.getAttribute('href')];
-      if (cat) {
+      const target = document.querySelector(href);
+      if (target) {
         e.preventDefault();
-        close();
-        renderProducts(cat);
-        document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
+        target.scrollIntoView({ behavior: "smooth" });
       }
     });
   });
-}
+})();
 
-// ── Modal de país ─────────────────────────────────────────────────
-function initModal() {
-  const modal = document.getElementById('countryModal');
-  if (sessionStorage.getItem('zh_ok')) { modal.classList.add('hidden'); return; }
+// =========================
+// CONSOLE MESSAGE (branding)
+// =========================
+console.log(
+  "%cZARA HOME",
+  'font-family: "Cormorant Garamond", serif; font-size: 24px; font-weight: 300; letter-spacing: 0.2em; color: #1a1a1a;',
+);
 
-  modal.classList.remove('hidden');
-  Object.assign(modal.style, { opacity:'1', pointerEvents:'all',
-    display:'flex', alignItems:'center', justifyContent:'center' });
-
-  const close = () => { modal.classList.add('hidden'); sessionStorage.setItem('zh_ok','1'); };
-  document.getElementById('continueBtn').addEventListener('click', close);
-  document.getElementById('modalClose').addEventListener('click',  close);
-}
-
-// ── Inyectar drawer del carrito ────────────────────────────────────
-function injectCartDrawer() {
-  document.body.insertAdjacentHTML('beforeend', `
-    <div id="cartOverlay" onclick="closeCartDrawer()"
-      style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1500;display:none"></div>
-
-    <div id="cartDrawer"
-      style="position:fixed;top:0;right:0;width:min(400px,100vw);height:100vh;
-             background:#fff;z-index:1501;display:flex;flex-direction:column;
-             transform:translateX(100%);transition:transform .35s ease;
-             font-family:'Manrope',sans-serif">
-      <div style="padding:20px 24px;border-bottom:1px solid #e5e5e5;
-                  display:flex;justify-content:space-between;align-items:center">
-        <span style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;
-                     font-style:italic;font-weight:300">Tu carrito</span>
-        <button onclick="closeCartDrawer()"
-          style="background:none;border:none;cursor:pointer;font-size:1.1rem;opacity:.5">✕</button>
-      </div>
-      <div id="cartBody" style="flex:1;overflow-y:auto"></div>
-      <div style="padding:20px 24px;border-top:1px solid #e5e5e5">
-        <p id="cartTotal" style="font-size:.85rem;text-align:right;margin-bottom:14px"></p>
-        <button onclick="toast('Redirigiendo al pago...')"
-          style="width:100%;padding:13px;background:#1a1a1a;color:#fff;border:none;
-                 font-family:'Manrope',sans-serif;font-size:.72rem;
-                 letter-spacing:.15em;text-transform:uppercase;cursor:pointer">
-          Finalizar compra
-        </button>
-      </div>
-    </div>
-  `);
-
-  document.head.insertAdjacentHTML('beforeend', `<style>
-    #cartOverlay.open { display:block !important }
-    #cartDrawer.open  { transform:translateX(0) !important }
-    .add-cart-btn {
-      position:absolute;bottom:0;left:0;right:0;padding:10px;
-      background:rgba(255,255,255,.92);border:none;cursor:pointer;
-      font-family:'Manrope',sans-serif;font-size:.7rem;
-      letter-spacing:.15em;text-transform:uppercase;
-      opacity:0;transition:opacity .2s
-    }
-    .product-price {
-      font-size:.78rem;color:#666;margin-top:4px
-    }
-  </style>`);
-}
-
-// ── Arranque ───────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
-  // Cargar JSON
-  try {
-    const res = await fetch('./data/products.json');
-    allProducts = await res.json();
-  } catch {
-    allProducts = {
-      bano: [
-        { id:101, name:'Toalla Algodón Blanco',   image:'./img/blanco.png',  price:25.99 },
-        { id:102, name:'Toalla Jacquard Cuadros', image:'./img/cuadros.png', price:29.99 },
-        { id:103, name:'Toalla Rizo Marrón',      image:'./img/marron.png',  price:35.99 },
-        { id:104, name:'Toalla Algodón Verde',    image:'./img/verde.png',   price:27.99 }
-      ]
-    };
-  }
-
-  initModal();
-  initHeader();
-  initMenu();
-  initHeroNav();
-  injectCartDrawer();
-
-  document.querySelector('.cart-icon').addEventListener('click', openCartDrawer);
-
-  // Mostrar productos de baño por defecto (primera sección del hero)
-  renderProducts('bano');
-
-  updateCartBadge();
-});
+console.log(
+  "%cBienvenido a la web oficial de Zara Home España",
+  'font-family: "Manrope", sans-serif; font-size: 14px; color: #666;',
+);

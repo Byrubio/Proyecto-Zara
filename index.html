@@ -57,7 +57,7 @@
     <header class="header" id="header">
       <div class="header-left">
          <!-- Botón hamburguesa de 3 rayitas -->
-         <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+         <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú">
           <span></span>
           <span></span>
           <span></span>
@@ -83,15 +83,33 @@
             <path d="M21 21l-4.35-4.35"/>
           </svg>
         </button>
-        <button class="header-icon cart-icon" aria-label="Cart">
+        <button class="header-icon cart-icon" id="cartIcon" aria-label="Cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M6 6h15l-1.5 9h-13z"/>
             <circle cx="9" cy="20" r="1"/>
             <circle cx="18" cy="20" r="1"/>
             <path d="M6 6L5 3H2"/>
           </svg>
-          <span class="cart-count">(0)</span>
+          <span class="cart-count" id="cartCount">(0)</span>
         </button>
+
+        <!-- Cart Dropdown -->
+        <div class="cart-dropdown hidden" id="cartDropdown">
+          <div class="cart-header">
+            <h3>Mi Carrito</h3>
+            <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">✕</button>
+          </div>
+          <div class="cart-items" id="cartItems">
+            <!-- Los productos se renderizarán aquí -->
+          </div>
+          <div class="cart-footer">
+            <div class="cart-total">
+              <span>Total:</span>
+              <span class="total-amount" id="totalAmount">0.00 €</span>
+            </div>
+            <button class="checkout-btn">Ir al Carrito</button>
+          </div>
+        </div>
       </div>
 
       <!-- Menú desplegable (oculto inicialmente) -->
@@ -103,7 +121,7 @@
               <li><a href="/decoracion">DECORACIÓN</a></li>
               <li><a href="/muebles">MUEBLES</a></li>
               <li><a href="/cocina-y-comedor">COCINA Y COMEDOR</a></li>
-              <li><a href="/bano">BAÑO</a></li>
+              <li><a href="./banos.html">BAÑO</a></li>
               <li><a href="/fragancias">FRAGANCIAS</a></li>
               <li><a href="/ninos-y-bebes">NIÑOS Y BEBÉS</a></li>
               <li><a href="/special-prices">SPECIAL PRICES</a></li>
@@ -149,27 +167,18 @@
               <a
                 href="/metal-trend"
                 class="hero-nav-link"
-                data-image="./img/metal_trend.jpg"
+                data-image="./img/260219_metal_trend.jpg"
               >
-                MUEBLES
-              </a>
-            </li>
-            <li>
-              <a
-                href="/gym-collection"
-                class="hero-nav-link"
-                data-image="./img/gym_collection.jpg"
-              >
-                DECORACIÓN 
+                METAL TREND
               </a>
             </li>
             <li>
               <a
                 href="/vincent-van-duysen"
                 class="hero-nav-link"
-                data-image="./img/vincent_van_duysen.jpg"
+                data-image="./img/250710_VVD_FRANCOIS.jpg"
               >
-                DORMITORIO
+                VINCENT VAN DUYSEN
               </a>
             </li>
           </ul>
@@ -181,6 +190,7 @@
       <section class="featured" id="featured">
         <h2 class="section-title">LO MÁS VENDIDO</h2>
         <div class="products-grid">
+          <a href="./banos.html" class="product-link">
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="./img/baños.png" alt="Baños" class="product-image" />
@@ -192,9 +202,9 @@
             </div>
             <div class="product-info">
               <h3 class="product-name">Baños</h3>
-            
             </div>
           </article>
+          </a>
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?w=600&h=800&fit=crop&q=80" alt="Decoración" class="product-image" />
