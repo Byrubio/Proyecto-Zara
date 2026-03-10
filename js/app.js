@@ -1,6 +1,6 @@
 console.log("app.js cargado");
 
-/*COMPORTAMIENTO HAMBURGUESAS*/
+/*COMPORTAMIENTO HAMBURGUESAS-SOLO ESCRITORIO*/
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const menuOverlay = document.getElementById("menuOverlay");
@@ -51,7 +51,7 @@ const STORAGE_KEY = "zarahome_modal_dismissed";
     }
   }
 
-  // Initialize modal
+  // Init modal
   openModal();
 
   // Event listeners
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function cargarProductosBano() {
   console.log("Iniciando carga de productos de baño...");
-  fetch("./data/banos.json")
+  fetch("data/banos.json")
     .then((res) => {
       console.log("Respuesta del fetch:", res);
       if (!res.ok) throw new Error("No se encuentra el JSON");
@@ -228,9 +228,11 @@ function renderBathProducts(productArray) {
     const heartClass = isFavorite ? "filled" : "";
 
     card.innerHTML = `
+    
+  
       <div class="image-wrapper">
         <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}" data-product-name="${product.nombre}">
-          ♥
+           &#9825;
         </button>
         <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
       </div>
@@ -516,21 +518,66 @@ function showAddedToCartMessage(productName) {
 // Inicializar búsqueda y filtros
 function initBathSearchAndFilters() {
   const searchInput = document.getElementById("searchInput");
+  const filterCategory = document.getElementById("filterCategory");
+  const filterPrice = document.getElementById("filterPrice");
+  const resetBtn = document.getElementById("resetFilters");
+
   if (!searchInput) return;
 
-  searchInput.addEventListener("input", (e) => {
-    const searchTerm = e.target.value.toLowerCase();
+  // Función para aplicar todos los filtros
+  function applyFilters() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const categoryFilter = filterCategory?.value || "";
+    const priceFilter = filterPrice?.value || "";
 
-    const filtered = allBathProducts.filter((product) =>
-      product.nombre.toLowerCase().includes(searchTerm),
-    );
+    let filtered = allBathProducts.filter((product) => {
+      // Filtro de búsqueda por texto
+      const matchesSearch = product.nombre.toLowerCase().includes(searchTerm);
+
+      // Filtro por categoría
+      let matchesCategory = true;
+      if (categoryFilter) {
+        const productCategory = product.nombre.toLowerCase();
+        matchesCategory = productCategory.includes(categoryFilter.toLowerCase());
+      }
+
+      // Filtro por precio
+      let matchesPrice = true;
+      if (priceFilter) {
+        if (priceFilter === "0-20") {
+          matchesPrice = product.precio >= 0 && product.precio <= 20;
+        } else if (priceFilter === "20-50") {
+          matchesPrice = product.precio > 20 && product.precio <= 50;
+        } else if (priceFilter === "50-100") {
+          matchesPrice = product.precio > 50;
+        }
+      }
+
+      return matchesSearch && matchesCategory && matchesPrice;
+    });
 
     renderBathProducts(filtered);
+  }
+
+  // Event listeners
+  searchInput.addEventListener("input", applyFilters);
+  filterCategory?.addEventListener("change", applyFilters);
+  filterPrice?.addEventListener("change", applyFilters);
+
+  // Reset filters
+  resetBtn?.addEventListener("click", () => {
+    searchInput.value = "";
+    if (filterCategory) filterCategory.value = "";
+    if (filterPrice) filterPrice.value = "";
+    renderBathProducts(allBathProducts);
   });
 
   // Actualizar pantalla del carrito al cargar
   updateCartDisplayAll();
 }
+
+
+
 
 // =========================
 // MOBILE MENU FUNCTIONALITY

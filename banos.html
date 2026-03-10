@@ -56,8 +56,10 @@
           <span class="logo-text">ZARA HOME</span>
         </a>
       </div>
+
       <div class="header-right">
         <button class="header-icon" aria-label="Account">
+          Iniciar sesión
           <svg
             width="20"
             height="20"
@@ -70,7 +72,18 @@
             <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" />
           </svg>
         </button>
+        <!-- AQUI VA EL BUSCADOR -->
+
         <button class="header-icon" aria-label="Search">
+          Buscar
+          <div class="header-search">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Buscar productos..."
+              aria-label="Buscar productos"
+            />
+          </div>
           <svg
             width="20"
             height="20"
@@ -83,7 +96,9 @@
             <path d="M21 21l-4.35-4.35" />
           </svg>
         </button>
+
         <button class="header-icon cart-icon" id="cartIcon" aria-label="Cart">
+          Carrito
           <svg
             width="20"
             height="20"
@@ -104,7 +119,13 @@
         <div class="cart-dropdown hidden" id="cartDropdown">
           <div class="cart-header">
             <h3>Mi Carrito</h3>
-            <button class="cart-close" id="cartClose" aria-label="Cerrar carrito">✕</button>
+            <button
+              class="cart-close"
+              id="cartClose"
+              aria-label="Cerrar carrito"
+            >
+              ✕
+            </button>
           </div>
           <div class="cart-items" id="cartItems">
             <!-- Los productos se renderizarán aquí -->
@@ -137,23 +158,63 @@
         <p>Descubre nuestra colección de toallas y accesorios para el baño</p>
       </section>
 
-      <!-- Search Bar -->
-      <section class="search-section">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Buscar productos..."
-          aria-label="Buscar productos"
-        />
-      </section>
+      <!-- Search and Filters Section -->
+      <div class="search-filter-section">
+        <div class="search-container">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Buscar productos..." 
+            class="search-input"
+            aria-label="Buscar productos"
+          />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="filterCategory">Categoría:</label>
+            <select id="filterCategory" class="filter-select" aria-label="Filtrar por categoría">
+              <option value="">Todas las categorías</option>
+              <option value="toalla">Toallas</option>
+              <option value="albornoz">Albornoces</option>
+              <option value="zapatilla">Zapatillas</option>
+              <option value="crema">Cremas</option>
+              <option value="jabón">Jabones</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filterPrice">Rango de precio:</label>
+            <select id="filterPrice" class="filter-select" aria-label="Filtrar por precio">
+              <option value="">Todos los precios</option>
+              <option value="0-20">$0 - $20</option>
+              <option value="20-50">$20 - $50</option>
+              <option value="50-100">$50+</option>
+            </select>
+          </div>
+
+          <button id="resetFilters" class="reset-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
 
       <div id="contenedor-baño" class="productos"></div>
     </main>
 
     <!-- Footer -->
+    
     <footer class="footer">
       <p>&copy; 2026 Zara Home. Todos los derechos reservados.</p>
     </footer>
+
   </body>
 </html>
