@@ -172,7 +172,7 @@ const STORAGE_KEY = "zarahome_modal_dismissed";
 let allBathProducts = []; // Almacenar todos los productos
 
 // Detectar y cargar productos de baño si el elemento existe en la página
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const contenedorBano = document.getElementById("contenedor-baño");
   console.log("Contenedor baño encontrado:", contenedorBano);
   if (contenedorBano) {
@@ -214,7 +214,8 @@ function renderBathProducts(productArray) {
   console.log("Contenedor limpiado");
 
   if (productArray.length === 0) {
-    contenedor.innerHTML = "<p class='no-products'>No se encontraron productos</p>";
+    contenedor.innerHTML =
+      "<p class='no-products'>No se encontraron productos</p>";
     console.log("No hay productos para mostrar");
     return;
   }
@@ -226,13 +227,14 @@ function renderBathProducts(productArray) {
     card.className = "producto-card";
     const isFavorite = favorites.some((f) => f.id === product.id);
     const heartClass = isFavorite ? "filled" : "";
+    const heartSymbol = isFavorite ? "&#9829;" : "&#9825;"; // solid vs outline heart
 
     card.innerHTML = `
     
   
       <div class="image-wrapper">
         <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}" data-product-name="${product.nombre}">
-           &#9825;
+           ${heartSymbol}
         </button>
         <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
       </div>
@@ -357,15 +359,18 @@ function saveFavorites(favorites) {
 
 // Alternar favorito
 function toggleFavorite(productId, productName, buttonElement) {
+  console.log("toggleFavorite called", productId, productName, buttonElement);
   let favorites = getFavorites();
   const idx = favorites.findIndex((f) => f.name === productName);
   if (idx !== -1) {
     // ya está como favorito -> eliminar
     favorites.splice(idx, 1);
     buttonElement.classList.remove("filled");
+    buttonElement.innerHTML = "&#9825;"; // outline heart
   } else {
     favorites.push({ id: productId, name: productName });
     buttonElement.classList.add("filled");
+    buttonElement.innerHTML = "&#9829;"; // solid heart
   }
 
   saveFavorites(favorites);
@@ -382,7 +387,7 @@ function updateCartDisplayAll() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
 
     cartItemCount.textContent = totalItems;
@@ -474,10 +479,7 @@ function renderCartDropdown() {
 
   // Close cart when clicking outside
   document.addEventListener("click", (e) => {
-    if (
-      !cartIcon.contains(e.target) &&
-      !cartDropdown.contains(e.target)
-    ) {
+    if (!cartIcon.contains(e.target) && !cartDropdown.contains(e.target)) {
       cartDropdown.classList.add("hidden");
     }
   });
@@ -538,7 +540,9 @@ function initBathSearchAndFilters() {
       let matchesCategory = true;
       if (categoryFilter) {
         const productCategory = product.nombre.toLowerCase();
-        matchesCategory = productCategory.includes(categoryFilter.toLowerCase());
+        matchesCategory = productCategory.includes(
+          categoryFilter.toLowerCase(),
+        );
       }
 
       // Filtro por precio
@@ -575,9 +579,6 @@ function initBathSearchAndFilters() {
   // Actualizar pantalla del carrito al cargar
   updateCartDisplayAll();
 }
-
-
-
 
 // =========================
 // MOBILE MENU FUNCTIONALITY

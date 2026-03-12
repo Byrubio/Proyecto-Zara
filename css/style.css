@@ -547,39 +547,39 @@ body.menu-open {
   text-transform: uppercase;
 }
 /*corazon de card*/
-/* --- Estilos del Botón del Corazón (Esquina superior derecha) --- */
+/* --- Estilos antiguos del botón del corazón (reemplazados más abajo) ---
+   Conservado sólo para referencia, los estilos activos están definidos más
+   abajo en el archivo para mantener un diseño consistente. */
+/*
 .wishlist-btn {
   position: absolute;
   top: 15px;
   right: 15px;
 
-  /* Crear el cuadrado gris limpio */
-  width: 36px; /* Tamaño del cuadrado */
+  width: 36px;
   height: 36px;
   background-color: #e8dede;
   border: 1px solid #5b5656;
   border-radius: 4px;
 
-  /* Alinear el icono del corazón en el centro */
   display: flex;
   justify-content: center;
   align-items: center;
 
-  /* Estilo del icono del corazón */
-  font-size: 20px; /* Tamaño del corazón */
-  color: #333; /* Color del icono outline */
+  font-size: 20px;
+  color: #333;
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
   z-index: 10;
 }
 
-/* Interacción al pasar el ratón por el corazón */
 .wishlist-btn:hover {
   background-color: #e0e0e0;
   color: #000;
   transform: scale(1.05);
 }
+*/
 /* =========================
    MAIN CONTENT
    ========================= */
@@ -1284,7 +1284,8 @@ body.menu-open {
 }
 
 .wishlist-btn.filled {
-  color: black;
+  /* visual feedback for favorited items */
+  color: red; /* make heart red when active */
   background-color: white;
   border-color: black;
 }
@@ -1562,8 +1563,6 @@ body.menu-open {
     font-size: 16px; /* Evita zoom en iOS */
   }
 }
-
-
 
 /* =========================
    SEARCH & FILTER STYLES
