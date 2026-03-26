@@ -21,7 +21,7 @@
     />
     <link rel="stylesheet" href="./css/style.css" />
     <script defer src="./js/app.js"></script>
-  </head>
+  </head> 
 
   <body>
     <!-- Country Selection Modal -->
@@ -72,22 +72,19 @@
         
       <div class="header-right">
         <!--BOTON DE INICIO DE SESION-->
-        <button class="header-icon" id="loginBtn" aria-label="Account">
-          Iniciar sesión
+        <button class="header-icon" id="loginBtn" >Iniciar sesión
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="8" r="4"/>
             <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/>
           </svg>
         </button>
-        <button class="header-icon" aria-label="Search">
-          Buscar
+        <button class="header-icon" >Buscar
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="11" cy="11" r="7"/>
             <path d="M21 21l-4.35-4.35"/>
           </svg>
         </button>
-        <button class="header-icon cart-icon" id="cartIcon" aria-label="Cart">
-          Carrito
+        <button class="header-icon cart-icon" id="cartIcon" > Carrito
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M6 6h15l-1.5 9h-13z"/>
             <circle cx="9" cy="20" r="1"/>
@@ -118,20 +115,32 @@
 
       <!-- Menú desplegable (oculto inicialmente) -->
         <div class="dropdown-menu" id="dropdownMenu">
-          <nav class="dropdown-nav">
+          <button class="menu-close" id="closeMenu" aria-label="Cerrar menú">
+    ✕
+  </button
+          <nav class="dropdown-nav" aria-label="Navegación principal">
             <ul class="dropdown-list">
-              <li><a href="/novedades">NOVEDADES</a></li>
-              <li><a href="/dormitorio">DORMITORIO</a></li>
-              <li><a href="/decoracion">DECORACIÓN</a></li>
-              <li><a href="/muebles">MUEBLES</a></li>
-              <li><a href="/cocina-y-comedor">COCINA Y COMEDOR</a></li>
-              <li><a href="./banos.html">BAÑO</a></li>
-              <li><a href="/fragancias">FRAGANCIAS</a></li>
-              <li><a href="/ninos-y-bebes">NIÑOS Y BEBÉS</a></li>
-              <li><a href="/special-prices">SPECIAL PRICES</a></li>
+              <li><a href="#">NOVEDADES</a></li>
+              <li><a href="#">THE ANIMALS OBSERVATORY</a></li>
+              <br/>
+              <li><a href="#">VINCENT VAN DUYSEN</a></li>
+              <br/>
+              <li><a href="#">DORMITORIO</a></li>
+              <li><a href="#">DECORACIÓN</a></li>
+              <li><a href="#">MUEBLES</a></li>
+              <li><a href="#">COCINA Y COMEDOR</a></li>
+              <li><a href="./banos.html" class="close-on-click">BAÑO</a></li>
+              <li><a href="#">FRAGANCIAS</a></li>
+              <li><a href="#">NIÑOS Y BEBÉS</a></li>
+              <br/>
+              <li><a href="#">SPECIAL PRICES</a></li>
+              <li><a href="#">EASTER COLLECTION</a></li>
               <li class="dropdown-divider"></li>
-              <li><a href="/ayuda">AYUDA</a></li>
-              <li><a href="/contacto">CONTACTO</a></li>
+              <li><a href="#">AYUDA</a></li>
+              <li><a href="#">CONTACTO</a></li>
+              <li><a href="#">Camas</a></li>
+
+
             </ul>
           </nav>
         </div>
@@ -160,20 +169,29 @@
           <ul class="hero-nav-list">
             <li>
               <a
-                href="/novedades"
+                href="/the-animals-observatory"
                 class="hero-nav-link active"
-                data-image="./img/cosmetica_01.jpg"
+                data-image="./img/animalObservatory.jpg"
               >
-                NOVEDADES
+                THE ANIMALS OBSERVATORY
               </a>
             </li>
-            <li>
+             <li>
               <a
                 href="/metal-trend"
                 class="hero-nav-link"
                 data-image="./img/260219_metal_trend.jpg"
               >
                 METAL TREND
+              </a>
+            </li>
+            <li>
+              <a
+                href="/novedades"
+                class="hero-nav-link active"
+                data-image="./img/cosmetica_01.jpg"
+              >
+                NOVEDADES
               </a>
             </li>
             <li>
@@ -198,7 +216,7 @@
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="./img/baños.png" alt="Baños" class="product-image" />
-              <button class="product-wishlist">
+              <button class="wishlist-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
@@ -212,7 +230,7 @@
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?w=600&h=800&fit=crop&q=80" alt="Decoración" class="product-image" />
-              <button class="product-wishlist">
+              <button class="wishlist-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
@@ -225,7 +243,7 @@
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="https://images.unsplash.com/photo-1616627561839-074385245ff6?w=600&h=800&fit=crop&q=80" alt="Dormitorio" class="product-image" />
-              <button class="product-wishlist">
+              <button class="wishlist-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
@@ -238,7 +256,7 @@
           <article class="product-card">
             <div class="product-image-wrapper">
               <img src="./img/muebles.png" alt="Muebles" class="product-image" />
-              <button class="product-wishlist">
+              <button class="wishlist-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>

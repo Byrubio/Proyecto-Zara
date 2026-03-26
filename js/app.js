@@ -4,20 +4,49 @@ console.log("app.js cargado");
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 const menuOverlay = document.getElementById("menuOverlay");
+const closeBtn = document.getElementById("closeMenu");
+
+
 
 if (hamburgerBtn && dropdownMenu && menuOverlay) {
-  hamburgerBtn.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("active");
-    menuOverlay.classList.toggle("hidden");
-    hamburgerBtn.classList.toggle("active");
-    document.body.classList.toggle("menu-open");
-  });
+  let isOpen = false;
 
-  menuOverlay.addEventListener("click", () => {
+  function openMenu() {
+    isOpen = true;
+    dropdownMenu.classList.add("active");
+    menuOverlay.classList.add("active");
+    hamburgerBtn.classList.add("active");
+    document.body.classList.add("menu-open");
+  }
+
+  function closeMenu() {
+    isOpen = false;
     dropdownMenu.classList.remove("active");
-    menuOverlay.classList.add("hidden");
+    menuOverlay.classList.remove("active");
     hamburgerBtn.classList.remove("active");
     document.body.classList.remove("menu-open");
+  }
+
+  hamburgerBtn.addEventListener("click", () => {
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  menuOverlay.addEventListener("click", closeMenu);
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeMenu);
+  }
+
+  // ESC key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen) {
+      closeMenu();
+      hamburgerBtn.focus();
+    }
+  });
+
+  // Click en link de baño:
+  dropdownMenu.querySelectorAll(".close-on-click").forEach((link) => {
+    link.addEventListener("click", closeMenu);
   });
 }
 
@@ -87,9 +116,9 @@ const STORAGE_KEY = "zarahome_modal_dismissed";
     ticking = false;
   }
 
-  window.addEventListener("scroll", () => {
+  globalThis.addEventListener("scroll", () => {
     if (!ticking) {
-      window.requestAnimationFrame(updateHeader);
+      globalThis.requestAnimationFrame(updateHeader);
       ticking = true;
     }
   });
@@ -227,14 +256,13 @@ function renderBathProducts(productArray) {
     card.className = "producto-card";
     const isFavorite = favorites.some((f) => f.id === product.id);
     const heartClass = isFavorite ? "filled" : "";
-    const heartSymbol = isFavorite ? "&#9829;" : "&#9825;"; // solid vs outline heart
 
     card.innerHTML = `
     
   
       <div class="image-wrapper">
         <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}" data-product-name="${product.nombre}">
-           ${heartSymbol}
+           &#9825;
         </button>
         <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
       </div>
@@ -250,20 +278,22 @@ function renderBathProducts(productArray) {
     contenedor.appendChild(card);
   });
 
-  // Agregar event listeners a los botones
+  // BOTON AÑADIR AL CARRITO: Agregar detectores de eventos a los botones
   document.querySelectorAll(".add-cart-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const productId = parseInt(e.target.dataset.productId);
+      const productId = Number.parseInt(e.target.dataset.productId);
       const productName = e.target.dataset.productName;
-      const productPrice = parseFloat(e.target.dataset.productPrice);
+      const productPrice = Number.parseFloat(btn.dataset.productPrice);
       addToBathCart(productId, productName, productPrice);
+      btn.textContent = "Añadido";
+      btn.classList.add("added");
     });
   });
 
-  // Agregar event listeners a los botones de favoritos
+  // Agregar oyentes a los botones de favoritos
   document.querySelectorAll(".wishlist-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const productId = parseInt(e.currentTarget.dataset.productId);
+      const productId = Number.parseInt(e.currentTarget.dataset.productId);
       const productName = e.currentTarget.dataset.productName;
       toggleFavorite(productId, productName, e.currentTarget);
     });
@@ -303,9 +333,16 @@ function removeFromBathCart(productId) {
     cart.splice(index, 1);
     saveCart(cart);
     updateCartDisplayAll();
+    // Restaurar el botón de añadir al eliminar un producto del carrito
+    const btn = document.querySelector(
+      `.add-cart-btn[data-product-id="${productId}"]`,
+    );
+    if (btn) {
+      btn.classList.remove("added");
+      btn.textContent = "Añadir al carrito";
+    }
   }
 }
-
 // Obtener carrito del localStorage
 function getCart() {
   try {
@@ -359,18 +396,17 @@ function saveFavorites(favorites) {
 
 // Alternar favorito
 function toggleFavorite(productId, productName, buttonElement) {
-  console.log("toggleFavorite called", productId, productName, buttonElement);
   let favorites = getFavorites();
   const idx = favorites.findIndex((f) => f.name === productName);
-  if (idx !== -1) {
+  if (idx >= 0) {
     // ya está como favorito -> eliminar
     favorites.splice(idx, 1);
     buttonElement.classList.remove("filled");
-    buttonElement.innerHTML = "&#9825;"; // outline heart
+    buttonElement.innerHTML = "&#9825;";
   } else {
     favorites.push({ id: productId, name: productName });
     buttonElement.classList.add("filled");
-    buttonElement.innerHTML = "&#9829;"; // solid heart
+    buttonElement.innerHTML = "&#9829;";
   }
 
   saveFavorites(favorites);
@@ -430,13 +466,8 @@ function renderCartDropdown() {
     totalPrice += itemTotal;
 
     // Buscar imagen del producto
-    let productImage = "./img/placeholder.png";
-    if (typeof allBathProducts !== "undefined" && allBathProducts.length > 0) {
-      const product = allBathProducts.find((p) => p.id === item.id);
-      if (product && product.imagen) {
-        productImage = product.imagen;
-      }
-    }
+    const product = allBathProducts?.find((p) => p.id === item.id);
+    const productImage = product?.imagen || "./img/placeholder.png";
 
     const cartItem = document.createElement("div");
     cartItem.className = "cart-item";
@@ -489,7 +520,7 @@ function renderCartDropdown() {
     if (e.target.matches(".remove-cart-btn")) {
       // evitar que el evento burbujee hasta document y cierre el dropdown
       e.stopPropagation();
-      const id = parseInt(e.target.dataset.productId);
+      const id = Number.parseInt(e.target.dataset.productId);
       removeFromBathCart(id);
     }
   });
@@ -517,116 +548,42 @@ function showAddedToCartMessage(productName) {
   }, 2000);
 }
 
-// Inicializar búsqueda y filtros
+// Inicializar búsqueda y filtros ++
 function initBathSearchAndFilters() {
   const searchInput = document.getElementById("searchInput");
-  const filterCategory = document.getElementById("filterCategory");
-  const filterPrice = document.getElementById("filterPrice");
-  const resetBtn = document.getElementById("resetFilters");
-
   if (!searchInput) return;
 
-  // Función para aplicar todos los filtros
-  function applyFilters() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const categoryFilter = filterCategory?.value || "";
-    const priceFilter = filterPrice?.value || "";
+  searchInput.addEventListener("input", (e) => {
+    const searchTerm = e.target.value.toLowerCase();
 
-    let filtered = allBathProducts.filter((product) => {
-      // Filtro de búsqueda por texto
-      const matchesSearch = product.nombre.toLowerCase().includes(searchTerm);
-
-      // Filtro por categoría
-      let matchesCategory = true;
-      if (categoryFilter) {
-        const productCategory = product.nombre.toLowerCase();
-        matchesCategory = productCategory.includes(
-          categoryFilter.toLowerCase(),
-        );
-      }
-
-      // Filtro por precio
-      let matchesPrice = true;
-      if (priceFilter) {
-        if (priceFilter === "0-20") {
-          matchesPrice = product.precio >= 0 && product.precio <= 20;
-        } else if (priceFilter === "20-50") {
-          matchesPrice = product.precio > 20 && product.precio <= 50;
-        } else if (priceFilter === "50-100") {
-          matchesPrice = product.precio > 50;
-        }
-      }
-
-      return matchesSearch && matchesCategory && matchesPrice;
-    });
+    const filtered = allBathProducts.filter((product) =>
+      product.nombre.toLowerCase().includes(searchTerm),
+    );
 
     renderBathProducts(filtered);
-  }
-
-  // Event listeners
-  searchInput.addEventListener("input", applyFilters);
-  filterCategory?.addEventListener("change", applyFilters);
-  filterPrice?.addEventListener("change", applyFilters);
-
-  // Reset filters
-  resetBtn?.addEventListener("click", () => {
-    searchInput.value = "";
-    if (filterCategory) filterCategory.value = "";
-    if (filterPrice) filterPrice.value = "";
-    renderBathProducts(allBathProducts);
   });
 
   // Actualizar pantalla del carrito al cargar
   updateCartDisplayAll();
 }
 
-// =========================
-// MOBILE MENU FUNCTIONALITY
-// =========================
-(function initMobileMenu() {
-  const menuBtn = document.getElementById("menuBtn");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
+/*nuevo*/
+const searchToggle = document.getElementById("searchToggle");
+const searchOverlay = document.getElementById("searchOverlay");
 
-  if (!menuBtn || !dropdownMenu) return;
+searchToggle.addEventListener("click", () => {
+  searchOverlay.classList.add("active");
+  document.getElementById("searchInput").focus();
+});
 
-  let isMenuOpen = false;
-
-  function toggleMenu(open = !isMenuOpen) {
-    isMenuOpen = open;
-    dropdownMenu.classList.toggle("active", isMenuOpen);
-    menuBtn.classList.toggle("active", isMenuOpen);
-    menuBtn.setAttribute("aria-expanded", isMenuOpen);
-
-    // Prevent body scroll when menu is open
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+// cerrar al hacer click fuera
+searchOverlay.addEventListener("click", (e) => {
+  if (e.target === searchOverlay) {
+    searchOverlay.classList.remove("active");
   }
+});
 
-  menuBtn.addEventListener("click", () => toggleMenu());
 
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (
-      isMenuOpen &&
-      !menuBtn.contains(e.target) &&
-      !dropdownMenu.contains(e.target)
-    ) {
-      toggleMenu(false);
-    }
-  });
-
-  // Close menu with Escape key
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isMenuOpen) {
-      toggleMenu(false);
-      menuBtn.focus();
-    }
-  });
-
-  // Close menu when clicking on a link
-  dropdownMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => toggleMenu(false));
-  });
-})();
 
 // =========================
 // CART COUNTER FUNCTIONALITY
@@ -647,23 +604,27 @@ function initBathSearchAndFilters() {
         count = cart.length || 0;
       }
     } catch (e) {
-      console.warn("Could not parse cart data");
+      console.warn("Could not parse cart data", e);
+      count = 0;
     }
 
     cartCount.textContent = count > 0 ? `(${count})` : "";
-    cartCount.setAttribute(
-      "aria-label",
-      count === 0
-        ? "Carrito vacío"
-        : `${count} producto${count !== 1 ? "s" : ""} en el carrito`,
-    );
+
+    let ariaLabel = "";
+    if (count === 0) {
+      ariaLabel = "Carrito vacío";
+    } else {
+      ariaLabel = `${count} producto${count !== 1 ? "s" : ""} en el carrito`;
+    }
+
+    cartCount.setAttribute("aria-label", ariaLabel);
   }
 
   // Initial update
   updateCartCount();
 
   // Optional: Listen for storage changes (if cart is modified in another tab)
-  window.addEventListener("storage", (e) => {
+  globalThis.addEventListener("storage", (e) => {
     if (e.key === "zarahome_cart") {
       updateCartCount();
     }
@@ -675,7 +636,7 @@ function initBathSearchAndFilters() {
 // =========================
 (function initUtils() {
   // Add touch support detection class
-  if ("ontouchstart" in window) {
+  if ("ontouchstart" in globalThis) {
     document.documentElement.classList.add("touch");
   }
 
