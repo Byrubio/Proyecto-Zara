@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Product;
+use App\Models\Book;
 use App\Models\Category;
 
-class ProductSeeder extends Seeder
+class BookSeeder extends Seeder
 {
     public function run(): void
     {
@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
         $cat = Category::firstOrCreate(['name' => 'Baños']);
 
         foreach ($data as $item) {
-            Product::updateOrCreate(
+            Book::updateOrCreate(
                 ['id' => $item['id']],
                 [
                     'nombre' => $item['nombre'],

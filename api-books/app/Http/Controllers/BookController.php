@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Book;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class BookController extends Controller
 {
     public function index()
     {
-        return Product::with('category')->get();
+        return Book::with('category')->get();
     }
 
     public function show($id)
     {
-        $product = Product::with('category')->find($id);
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+        $Book = Book::with('category')->find($id);
+        if (!$Book) {
+            return response()->json(['message' => 'Book not found'], 404);
         }
-        return $product;
+        return $Book;
     }
 
     public function store(Request $request)
@@ -30,7 +30,7 @@ class ProductController extends Controller
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
-        $product = Product::create($validated);
-        return response()->json($product, 201);
+        $Book = Book::create($validated);
+        return response()->json($Book, 201);
     }
 }
