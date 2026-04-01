@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 $dir = __DIR__ . '/database/migrations/';
 $files = scandir($dir);
