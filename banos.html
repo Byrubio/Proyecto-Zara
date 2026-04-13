@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baños - Zara Home</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script defer src="./js/app.js"></script>
+  </head>
+
+  <body>
+    <!-- Country Selection Modal -->
+    <div class="modal-overlay hidden" id="countryModal">
+      <div class="modal">
+        <button class="modal-close" id="modalClose" aria-label="Cerrar modal">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M1 1L13 13M1 13L13 1"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+          </svg>
+        </button>
+        <div class="modal-content">
+          <h2 class="modal-title">HOLA,</h2>
+          <p class="modal-subtitle">Sí, continuar en España</p>
+          <button class="modal-btn modal-btn-primary" id="continueBtn">
+            SÍ, CONTINUAR EN ESPAÑA
+          </button>
+          <button class="modal-btn modal-btn-secondary">
+            NO, IR A LA WEB DE UNITED STATES
+          </button>
+          <p class="modal-note">
+            Estamos presentes en más de 79 regiones. Selecciona la tuya
+            <a href="/seleccion-pais">aquí</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header-left">
+        <button
+          class="hamburger-btn"
+          id="hamburger-btn"
+          aria-label="Abrir menú"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <div class="header-center">
+        <a href="index.html" class="logo">
+          <span class="logo-text">ZARA HOME</span>
+        </a>
+      </div>
+
+      <div class="header-right">
+        <button class="header-icon" id="loginBtn">
+          Iniciar sesión
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" />
+          </svg>
+        </button>
+
+        <!-- BOTÓN -->
+        <button class="header-icon" id="searchToggle">
+          BUSCAR
+
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+        </button>
+
+        <!-- BUSCADOR (FUERA) -->
+        <div class="search-overlay" id="searchOverlay">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="¿Qué Estás Buscando?"
+          />
+        </div>
+
+        <button class="header-icon cart-icon" id="cartIcon">
+          Carrito
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M6 6h15l-1.5 9h-13z" />
+            <circle cx="9" cy="20" r="1" />
+            <circle cx="18" cy="20" r="1" />
+            <path d="M6 6L5 3H2" />
+          </svg>
+          <span class="cart-count" id="cartCount">(0)</span>
+        </button>
+
+        <!-- Cart Dropdown -->
+        <div class="cart-dropdown hidden" id="cartDropdown">
+          <div class="cart-header">
+            <h3>Mi Carrito</h3>
+            <button
+              class="cart-close"
+              id="cartClose"
+              aria-label="Cerrar carrito"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="cart-items" id="cartItems">
+            <!-- Los productos se renderizarán aquí -->
+          </div>
+          <div class="cart-footer">
+            <div class="cart-total">
+              <span>Total:</span>
+              <span class="total-amount" id="totalAmount">0.00 €</span>
+            </div>
+            <button class="checkout-btn">Ir al Carrito</button>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <nav class="dropdown-nav">
+          <ul class="dropdown-list">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="banos.html">Baños</a></li>
+            <li><a href="#">Dormitorio</a></li>
+            <li><a href="#">Decoración</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <section class="page-header">
+        <h1>Baños</h1>
+        <p>Descubre nuestra colección de toallas y accesorios para el baño</p>
+      </section>
+
+      <div class="view-controls">
+        <button data-view="2" class="view-btn">
+          <div class="grid grid-2">
+            <span></span><span></span> <span></span><span></span>
+          </div>
+        </button>
+
+        <button data-view="3" class="view-btn active">
+          <div class="grid grid-3">
+            <span></span><span></span><span></span> <span></span><span></span
+            ><span></span> <span></span><span></span><span></span>
+          </div>
+        </button>
+
+        <button data-view="4" class="view-btn">
+          <div class="grid grid-4">
+            <span></span><span></span><span></span><span></span> <span></span
+            ><span></span><span></span><span></span> <span></span><span></span
+            ><span></span><span></span> <span></span><span></span><span></span
+            ><span></span>
+          </div>
+        </button>
+      </div>
+      <div id="contenedor-baño" class="productos view-4"></div>
+    </main>
+
+    <!-- Modal de Inicio de Sesión / Registro -->
+    <div class="auth-modal hidden" id="authModal">
+      <div class="auth-overlay" id="authOverlay"></div>
+      <div class="auth-container">
+        <button class="auth-close" id="authClose" aria-label="Cerrar">✕</button>
+        
+        <div class="auth-header">
+          <h2 id="authTitle">Iniciar Sesión</h2>
+          <p id="authSubtitle">Inicia sesión con tu correo electrónico o regístrate para hacerte Miembro de Zara Home.</p>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form class="auth-form" id="loginForm">
+          <div class="auth-input-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+          </div>
+          <div class="auth-input-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+          </div>
+          <div id="loginError" style="color:red;font-size:13px;margin-bottom:8px;display:none;"></div>
+          <button type="submit" class="auth-submit-btn">CONTINUAR</button>
+          <div class="auth-footer">
+            <span>¿No tienes cuenta? <a href="#" class="auth-link" id="switchToRegister">Regístrate</a></span>
+          </div>
+        </form>
+
+        <!-- FORM REGISTRO -->
+        <form class="auth-form hidden" id="registerForm">
+          <div class="auth-input-group">
+            <label for="regName">Nombre</label>
+            <input type="text" id="regName" placeholder="Tu nombre completo" required>
+          </div>
+          <div class="auth-input-group">
+            <label for="regEmail">Correo electrónico</label>
+            <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+          </div>
+          <div class="auth-input-group">
+            <label for="regPassword">Contraseña</label>
+            <input type="password" id="regPassword" placeholder="Mínimo 8 caracteres" required>
+          </div>
+          <div id="registerError" style="color:red;font-size:13px;margin-bottom:8px;display:none;"></div>
+          <button type="submit" class="auth-submit-btn">CREAR CUENTA</button>
+          <div class="auth-footer">
+            <span>¿Ya tienes cuenta? <a href="#" class="auth-link" id="switchToLogin">Inicia sesión</a></span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+
+    <footer class="footer">
+      <p>&copy; 2026 Zara Home. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

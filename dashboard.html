@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Cuenta | Zara Home</title>
+  <link rel="stylesheet" href="./css/dashboard.css" />
+</head>
+<body>
+
+  <!-- Sidebar Lateral -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand-logo">ZARA HOME</a>
+    
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="#" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Mi Perfil
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Mis Pedidos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Favoritos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Ayuda
+        </a>
+      </li>
+    </ul>
+
+    <div class="logout-btn-container">
+      <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <!-- Área Central -->
+  <main class="main-content">
+    <header>
+      <h1 id="welcomeMessage" class="welcome-title">Bienvenido</h1>
+      <p class="subtitle">Gestiona tu información personal, pedidos y configuraciones.</p>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- Tarjeta 1 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Últimos Pedidos</h2>
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+        </div>
+        <div class="card-content">
+          Aún no has realizado ninguna compra en esta cuenta.
+          <span class="card-number">0</span>
+          <a href="index.html" class="action-link">Descubrir colecciones</a>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Direcciones</h2>
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+        </div>
+        <div class="card-content">
+          No tienes direcciones guardadas por el momento. Facilita tu pago en futuras compras.
+          <br/>
+          <a href="#" class="action-link">Añadir Dirección</a>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Datos Personales</h2>
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="card-content">
+          Gestiona tu correo de acceso (<span id="userEmail">cargando...</span>) y contraseña para mantener tu cuenta segura.
+          <br/>
+          <a href="#" class="action-link">Modificar Datos</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lógica Original Reescrita -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/user", {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+            Accept: "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          localStorage.removeItem("token");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // Poblar datos estéticos
+        document.getElementById("welcomeMessage").textContent = `¡HOLA, ${data.name.toUpperCase()}!`;
+        document.getElementById("userEmail").textContent = data.email || 'tu email';
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("auth_user");
+      localStorage.removeItem("auth_token");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

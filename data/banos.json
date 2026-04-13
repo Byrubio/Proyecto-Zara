@@ -1,0 +1,76 @@
+[
+  {
+    "id": 1,
+    "nombre": "Toalla Algodón Blanco",
+    "precio": 25.99,
+    "imagen": "./img/blanco.png"
+  },
+  {
+    "id": 2,
+    "nombre": "Toalla Jacquard Cuadros",
+    "precio": 29.99,
+    "imagen": "./img/cuadros.png"
+  },
+  {
+    "id": 3,
+    "nombre": "Toalla Rizo Marrón",
+    "precio": 16.99,
+    "imagen": "./img/marron1.png"
+  },
+  {
+    "id": 4,
+    "nombre": "Toalla de Algodón",
+    "precio": 35.99,
+    "imagen": "./img/verde.png"
+  },
+  {
+    "id": 5,
+    "nombre": "Albornoz de Algodón Premium",
+    "precio": 35.99,
+    "imagen": "./img/albornoz-premium.png"
+  },
+  {
+    "id": 8,
+    "nombre": "Zapatilla pala animal print",
+    "precio": 22.99,
+    "imagen": "./img/zapatilla-animal.png"
+  },
+  {
+    "id": 6,
+    "nombre": "Zapatilla de Baño",
+    "precio": 19.99,
+    "imagen": "./img/zapatilla-baño.png"
+  },
+
+  {
+    "id": 7,
+    "nombre": "Albornoz Velour Animal Print",
+    "precio": 49.99,
+    "imagen": "./img/albornoz-animal.png"
+  },
+
+  {
+    "id": 9,
+    "nombre": "Crema corporal white lotus",
+    "precio": 7.99,
+    "imagen": "./img/crema-whitelotus.png"
+  },
+  {
+    "id": 10,
+    "nombre": "Crema corporal basilicum",
+    "precio": 7.99,
+    "imagen": "./img/crema-basilicum.png"
+  },
+  {
+    "id": 11,
+    "nombre": "Jabón líquido de manos Verdant Forest",
+    "precio": 12.99,
+    "imagen": "./img/jabon-verdant-forest.png"
+  },
+  {
+    "id": 12,
+    "nombre": "Jabón líquido de manos Clean Blossom",
+    "precio": 12.99,
+    "imagen": "./img/jabon-clean-blossom.png"
+  }
+]
