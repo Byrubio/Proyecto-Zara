@@ -472,8 +472,7 @@ function renderBathProducts(productArray) {
       const productName = e.target.dataset.productName;
       const productPrice = Number.parseFloat(btn.dataset.productPrice);
       addToBathCart(productId, productName, productPrice);
-      btn.textContent = "Añadido";
-      btn.classList.add("added");
+      // Se ha eliminado el cambio de texto a "Añadido" por petición del usuario
     });
   });
 
@@ -520,14 +519,7 @@ function removeFromBathCart(productId) {
     cart.splice(index, 1);
     saveCart(cart);
     updateCartDisplayAll();
-    // Restaurar el botón de añadir al eliminar un producto del carrito
-    const btn = document.querySelector(
-      `.add-cart-btn[data-product-id="${productId}"]`,
-    );
-    if (btn) {
-      btn.classList.remove("added");
-      btn.textContent = "Añadir al carrito";
-    }
+    // Ya no es necesario restaurar el texto del botón porque ya no cambia
   }
 }
 // Obtener carrito del localStorage
