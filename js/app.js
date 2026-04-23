@@ -294,12 +294,26 @@ function initAuthSystem() {
 
   // 1. Actualizar estado visual inicial
   const token = localStorage.getItem("token");
+  const isAdmin = localStorage.getItem("is_admin") === "true";
+
   if (token && loginBtn) {
     loginBtn.innerHTML = `Mi Cuenta <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/></svg>`;
     loginBtn.onclick = (e) => {
       e.preventDefault();
       window.location.href = "dashboard.html";
     };
+
+    // Si es admin, añadir el botón especial
+    if (isAdmin && !document.getElementById("adminLinkHeader")) {
+      const adminBtn = document.createElement("button");
+      adminBtn.id = "adminLinkHeader";
+      adminBtn.className = "header-icon";
+      adminBtn.style.marginRight = "15px";
+      adminBtn.style.fontWeight = "bold";
+      adminBtn.innerHTML = `Admin <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+      adminBtn.onclick = () => window.location.href = "admin.html";
+      loginBtn.parentNode.insertBefore(adminBtn, loginBtn);
+    }
   }
 
   // 2. Eventos para abrir/cerrar modal (Solo si no está logueado)
@@ -375,6 +389,7 @@ function initAuthSystem() {
         }
         localStorage.setItem("token", data.token);
         localStorage.setItem("user_name", data.user.name);
+        localStorage.setItem("is_admin", data.isAdmin ? "true" : "false");
         closeAuthModal();
         if (data.isAdmin) {
           window.location.href = "admin.html";

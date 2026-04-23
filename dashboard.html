@@ -127,9 +127,25 @@
           return;
         }
 
-        // Poblar datos estéticos
         document.getElementById("welcomeMessage").textContent = `¡HOLA, ${data.name.toUpperCase()}!`;
         document.getElementById("userEmail").textContent = data.email || 'tu email';
+
+        // Si es admin, añadir link al panel
+        const isAdmin = data.role_id === 1; // Assuming 1 is admin based on RoleSeeder
+        localStorage.setItem("is_admin", isAdmin ? "true" : "false");
+
+        if (isAdmin) {
+          const navMenu = document.querySelector(".nav-menu");
+          const adminItem = document.createElement("li");
+          adminItem.className = "nav-item";
+          adminItem.innerHTML = `
+            <a href="admin.html" class="nav-link" style="color: #000; font-weight: 600;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Panel Admin
+            </a>
+          `;
+          navMenu.appendChild(adminItem);
+        }
 
         // Fetch Orders
         try {
