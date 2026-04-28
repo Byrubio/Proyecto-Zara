@@ -20,7 +20,7 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 
 ### Backend
 * PHP
-* Laravel
+* Laravel 12
 * Composer
 
 ### Base de datos
@@ -42,31 +42,14 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 *  Sistema de favoritos
 *  Página de productos (Baño)
 *  Cambio de vistas (2, 3 y 4 columnas)
-*  Sistema de inicio de sesión
+*  Sistema de autenticación (Login/Register).
 *  Selección de región (modal)
-*  Gestión de productos desde JavaScript
-*  Conexión con API (login / datos)
+*  Gestión de productos (CRUD) mediante API.
 *  Panel de administración (gestión de productos)
 
----
-## 📦 2. Paquetes y Tecnologías Usadas
+    ---
 
-Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar el desarrollo:
-
-*   **Laravel 12:** Framework base del proyecto.
-*   **Laravel Sanctum (v4.0):** Encargado de la seguridad y autenticación mediante tokens de los endpoints.
-*   **Laravel Tinker:** Para la depuración y ejecución de código en tiempo real desde la consola.
-*   **FakerPHP:** Para la generación de datos de prueba (seeders) en la base de datos.
-*   **Laravel Sail:** Configuración de entorno de desarrollo basado en Docker.
-*   **PHPUnit:** Herramienta para la ejecución de pruebas unitarias y de integración.
-
----
-
-## 🚀 3. Definición de Endpoints (API)
-
-Todos los endpoints de la API están prefijados con `/api`. Las respuestas se entregan siempre en formato JSON.
-
-## Estructura del proyecto
+  ## Estructura del proyecto
 
 ```
 /proyecto
@@ -79,19 +62,30 @@ Todos los endpoints de la API están prefijados con `/api`. Las respuestas se en
 ├── admin.html (opcional)
 └── README.md
 ```
+---
+## Guía de Desarrollo - API de Productos
+Esta sección detalla los paquetes utilizados y los puntos de acceso para interactuar con los datos.
+
+##  Paquetes y Tecnologías Usadas
+
+Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar el desarrollo:
+
+*   **Laravel 12:** Framework base del proyecto.
+*   **Laravel Sanctum (v4.0):** Encargado de la seguridad y autenticación mediante tokens de los endpoints.
+*   **Laravel Tinker:** Para la depuración y ejecución de código en tiempo real desde la consola.
+*   **FakerPHP:** Para la generación de datos de prueba (seeders) en la base de datos.
+*   **Laravel Sail:** Configuración de entorno de desarrollo basado en Docker.
+*   **PHPUnit:** Herramienta para la ejecución de pruebas unitarias y de integración.
 
 ---
 
-##  API
-#  Guía de Desarrollo - API de Productos
+##  Definición de Endpoints (API)
 
-Esta guía detalla los pasos necesarios para configurar el entorno de desarrollo, las herramientas utilizadas y la documentación de los puntos de acceso (endpoints) de la API.
+Todos los endpoints de la API están prefijados con `/api`. Las respuestas se entregan siempre en formato JSON.
 
 ---
 
-
-
-### 🔐 Autenticación
+###  Autenticación
 
 | Método | Endpoint | Acción | Descripción |
 |:--- |:--- |:--- |:--- |
@@ -100,7 +94,7 @@ Esta guía detalla los pasos necesarios para configurar el entorno de desarrollo
 | `POST` | `/api/logout` | `logout` | Cierre de sesión (revocación de Token). |
 | `GET` | `/api/user` | `auth:sanctum` | Obtiene el perfil del usuario autenticado. |
 
-### 📦 Gestión de Productos (CRUD)
+###  Gestión de Productos (CRUD)
 
 | Método | Endpoint | Acción | Descripción |
 |:--- |:--- |:--- |:--- |
@@ -113,7 +107,7 @@ Esta guía detalla los pasos necesarios para configurar el entorno de desarrollo
 > **Nota:** Los endpoints de creación, edición y borrado requieren que se envíe el `Bearer Token` obtenido en el login en las cabeceras de la petición.
 
 ---
-## 🛠️ Instalación y uso
+##  Instalación y uso
 
 ### Requisitos:
 * XAMPP (Apache + MySQL)
