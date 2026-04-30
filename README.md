@@ -73,6 +73,7 @@ Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar
 **Backend**
 *   **Laravel 12:** Framework base del proyecto.
 *   **PHP 8.2**
+  
 **Herramientas de desarrollo**
 *   **SonarQube Cloud:** análisis de calidad de código
 *   **Antigravity:** asistente de IA para desarrollo
