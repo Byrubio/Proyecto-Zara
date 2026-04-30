@@ -73,12 +73,8 @@ Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar
 **Backend**
 *   **Laravel 12:** Framework base del proyecto.
 *   **PHP 8.2**
-*   **Laravel Sanctum (v4.0):** Encargado de la seguridad y autenticación mediante tokens de los endpoints.
-*   **Laravel Tinker:** Para la depuración y ejecución de código en tiempo real desde la consola.
+  
 **Herramientas de desarrollo**
-*   **FakerPHP:** Para la generación de datos de prueba (seeders) en la base de datos.
-*   **Laravel Pint:** formateo de código
-*   **Laravel Pail:** monitorización de logs
 *   **SonarQube Cloud:** análisis de calidad de código
 *   **Antigravity:** asistente de IA para desarrollo
 
