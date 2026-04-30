@@ -19,8 +19,8 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 * JavaScript (Vanilla)
 
 ### Backend
-* PHP
-* Laravel
+* PHP 8.2
+* Laravel 12
 * Composer
 
 ### Base de datos
@@ -42,15 +42,14 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 *  Sistema de favoritos
 *  Página de productos (Baño)
 *  Cambio de vistas (2, 3 y 4 columnas)
-*  Sistema de inicio de sesión
+*  Sistema de autenticación (Login/Register).
 *  Selección de región (modal)
-*  Gestión de productos desde JavaScript
-*  Conexión con API (login / datos)
+*  Gestión de productos (CRUD) mediante API.
 *  Panel de administración (gestión de productos)
 
----
+    ---
 
-## Estructura del proyecto
+  ## Estructura del proyecto
 
 ```
 /proyecto
@@ -63,50 +62,80 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 ├── admin.html (opcional)
 └── README.md
 ```
+---
+## Guía de Desarrollo - API de Productos
+Esta sección detalla los paquetes utilizados y los puntos de acceso para interactuar con los datos.
+
+##  Paquetes y Tecnologías Usadas
+
+Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar el desarrollo:
+
+**Backend**
+*   **Laravel 12:** Framework base del proyecto.
+*   **PHP 8.2**
+*   **Laravel Sanctum (v4.0):** Encargado de la seguridad y autenticación mediante tokens de los endpoints.
+*   **Laravel Tinker:** Para la depuración y ejecución de código en tiempo real desde la consola.
+**Herramientas de desarrollo**
+*   **FakerPHP:** Para la generación de datos de prueba (seeders) en la base de datos.
+*   **Laravel Pint:** formateo de código
+*   **Laravel Pail:** monitorización de logs
+*   **SonarQube Cloud:** análisis de calidad de código
+*   **Antigravity:** asistente de IA para desarrollo
 
 ---
 
-##  API
-El backend desarrollado con Laravel permite la comunicación con el frontend mediante endpoints.
+##  Definición de Endpoints (API)
 
-Ejemplo:
-POST /api/login
-
-Permite autenticar usuarios desde el frontend.
+Todos los endpoints de la API están prefijados con `/api`. Las respuestas se entregan siempre en formato JSON.
 
 ---
 
+###  Autenticación
+
+| Método | Endpoint | Acción | Descripción |
+|:--- |:--- |:--- |:--- |
+| `POST` | `/api/register` | `register` | Registro de nuevos usuarios. |
+| `POST` | `/api/login` | `login` | Inicio de sesión y entrega de Token. |
+| `POST` | `/api/logout` | `logout` | Cierre de sesión (revocación de Token). |
+| `GET` | `/api/user` | `auth:sanctum` | Obtiene el perfil del usuario autenticado. |
+
+###  Gestión de Productos (CRUD)
+
+| Método | Endpoint | Acción | Descripción |
+|:--- |:--- |:--- |:--- |
+| `GET` | `/api/products` | `index` | Listar todos los productos. |
+| `POST` | `/api/products` | `store` | Crear un nuevo producto. |
+| `GET` | `/api/products/{product}` | `show` | Ver detalle de un producto específico. |
+| `PUT/PATCH` | `/api/products/{product}` | `update` | Editar un producto existente. |
+| `DELETE` | `/api/products/{product}` | `destroy` | Eliminar un producto. |
+
+> **Nota:** Los endpoints de creación, edición y borrado requieren que se envíe el `Bearer Token` obtenido en el login en las cabeceras de la petición.
+
+---
 ##  Instalación y uso
+
 ### Requisitos:
-* XAMPP
-* PHP
-* Composer
-  
+* XAMPP (Apache + MySQL)
+* PHP 8.2+ y Composer
+
 ### Pasos:
-1. Clonar el repositorio:
+1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/Byrubio/Proyecto-Zara.git
+   git clone https://github.com
+   cd Proyecto-Zara
    ```
-2. Iniciar XAMPP(Apache + MYSQL).
-3. Configurar base de datos en phpMyAdmin.
-4. Instalar dependencias de Laravel:
+2. **Configuración automática:**
+   Ejecuta este comando para configurar todo el sistema de golpe:
    ```bash
-   composer install
+   composer run setup
+   ```
+3. **Iniciar el proyecto:**
+   Para arrancar tanto el servidor de Laravel como el de Vite (frontend):
+   ```bash
+   composer run dev
    ```
 
-5. Configurar archivo .env
-6. Ejecutar migraciones:
-   ```bash
-   php artisan migrate
-   ```
-7. Iniciar servidor Laravel:
-    ```bash
-   php artisan serve
-   ```
-9. Abrir frontend en navegador:
-     ```bash
-   http://localhost:3000
-   ```
+
 
 ---
 ## Análisis de código
