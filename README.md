@@ -52,15 +52,17 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
   ## Estructura del proyecto
 
 ```
-/proyecto
-│
-├── /css
-├── /js
-├── /images
-├── index.html
-├── banos.html
-├── admin.html (opcional)
-└── README.md
+/api-products
+/css
+/data
+/img
+/js
+README.md
+admin.html
+banos.html
+dashboard.html
+index.html
+
 ```
 ---
 ## Guía de Desarrollo - API de Productos
