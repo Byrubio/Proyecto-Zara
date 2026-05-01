@@ -162,9 +162,13 @@ Se ha utilizado SonarQube Cloud para:
 
 ##  Mejoras futuras
 
-* Base de datos real
+* Página de detalle de producto
 * Sistema de pagos
-* Autenticación avanzada
+* Autenticación avanzada(roles,permisos,recuperación de contraseña)
+* Panel de administración completo (categorías, usuarios, pedidos)
+* Filtros avanzados (precio, color, tamaño)
+* Optimización responsive para más dispositivos
+* Mejora del rendimiento y carga de imágenes
 
 ---
 
