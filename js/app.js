@@ -4,24 +4,30 @@ console.log("app.js cargado");
 // UI HELPERS (AESTHETIC NOTIFICATIONS)
 // =========================
 
-function showToast(message) {
-  let container = document.querySelector(".toast-container");
-  if (!container) {
-    container = document.createElement("div");
-    container.className = "toast-container";
-    document.body.appendChild(container);
+// Configurar Notyf
+const notyf = new Notyf({
+  position: { x: 'right', y: 'bottom' },
+  duration: 3000,
+  types: [
+    {
+      type: 'success',
+      background: '#000',
+      icon: false
+    },
+    {
+      type: 'error',
+      background: '#d9534f',
+      icon: false
+    }
+  ]
+});
+
+function showToast(message, type = 'success') {
+  if (type === 'success') {
+    notyf.success(message);
+  } else {
+    notyf.error(message);
   }
-
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = `<span>${message}</span>`;
-  container.appendChild(toast);
-
-  // Auto remove after 3 seconds
-  setTimeout(() => {
-    toast.classList.add("fade-out");
-    setTimeout(() => toast.remove(), 400);
-  }, 3000);
 }
 
 function showConfirmCustom(message) {
@@ -882,17 +888,7 @@ function renderCartDropdown() {
   });
 })();
 
-// Mostrar mensaje de producto añadido
-function showAddedToCartMessage(productName) {
-  const message = document.createElement("div");
-  message.className = "cart-message";
-  message.textContent = `${productName} añadido al carrito`;
-  document.body.appendChild(message);
 
-  setTimeout(() => {
-    message.remove();
-  }, 2000);
-}
 
 // Inicializar búsqueda y filtros ++
 function initBathSearchAndFilters() {

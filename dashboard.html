@@ -6,6 +6,7 @@
   <title>Mi Cuenta | Zara Home</title>
   <link rel="icon" type="image/png" href="https://ext.same-assets.com/1847217613/1510441429.png" />
   <link rel="stylesheet" href="./css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 </head>
 <body>
 
@@ -377,26 +378,30 @@
         displayDatos.style.display = 'block';
       });
 
-      // Función auxiliar para Toasts estéticos (igual que en app.js)
+      // Función auxiliar para Toasts estéticos (Notyf)
+      const notyf = new Notyf({
+        position: { x: 'right', y: 'bottom' },
+        duration: 3000,
+        types: [
+          {
+            type: 'success',
+            background: '#000',
+            icon: false
+          },
+          {
+            type: 'error',
+            background: '#d9534f',
+            icon: false
+          }
+        ]
+      });
+
       function showToast(message, type = 'success') {
-        const toast = document.createElement("div");
-        const bgColor = type === 'success' ? '#000' : '#d9534f';
-        toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${bgColor};color:#fff;padding:15px 25px;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-family:var(--primary-font);font-size:13px;z-index:10000;opacity:0;transform:translateY(20px);transition:all 0.3s ease;`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        // Animar entrada
-        setTimeout(() => {
-          toast.style.opacity = '1';
-          toast.style.transform = 'translateY(0)';
-        }, 10);
-        
-        // Animar salida
-        setTimeout(() => {
-          toast.style.opacity = '0';
-          toast.style.transform = 'translateY(20px)';
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        if (type === 'success') {
+          notyf.success(message);
+        } else {
+          notyf.error(message);
+        }
       }
 
       btnGuardar.addEventListener('click', async (e) => {
@@ -502,5 +507,6 @@
       window.location.href = "index.html";
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 </body>
 </html>

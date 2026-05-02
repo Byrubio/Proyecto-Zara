@@ -17,21 +17,31 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // UI Helper (reusing from app.js logic basically)
-function showToast(message) {
-  let container = document.querySelector(".toast-container");
-  if (!container) {
-    container = document.createElement("div");
-    container.className = "toast-container";
-    document.body.appendChild(container);
+// Configurar Notyf
+const notyf = new Notyf({
+  position: { x: 'right', y: 'bottom' },
+  duration: 3000,
+  types: [
+    {
+      type: 'success',
+      background: '#000',
+      icon: false
+    },
+    {
+      type: 'error',
+      background: '#d9534f',
+      icon: false
+    }
+  ]
+});
+
+// Wrapper para compatibilidad
+function showToast(message, type = 'success') {
+  if (type === 'success') {
+    notyf.success(message);
+  } else {
+    notyf.error(message);
   }
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = `<span>${message}</span>`;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add("fade-out");
-    setTimeout(() => toast.remove(), 400);
-  }, 3000);
 }
 
 function showConfirmCustom(message) {
@@ -115,7 +125,16 @@ async function fetchRoles() {
   if (res && res.ok) {
     rolesData = await res.json();
     const select = document.getElementById("userRole");
-    select.innerHTML = rolesData.map(r => `<option value="${r.id}">${r.name.toUpperCase()}</option>`).join('');
+    
+    let html = '<option value="" disabled selected>Seleccionar rol...</option>';
+    html += rolesData.map(r => {
+      const displayName = r.name === 'admin' ? 'Administrador' : 
+                          r.name === 'cliente' ? 'Cliente' : 
+                          r.name.charAt(0).toUpperCase() + r.name.slice(1);
+      return `<option value="${r.id}">${displayName}</option>`;
+    }).join('');
+    
+    select.innerHTML = html;
   }
 }
 
@@ -126,13 +145,16 @@ async function fetchUsers() {
     const users = await res.json();
     const tbody = document.getElementById("usersTableBody");
     tbody.innerHTML = users.map(user => {
-      const roleName = user.role ? user.role.name : 'N/A';
+      const roleRaw = user.role ? user.role.name : 'N/A';
+      const roleName = roleRaw === 'admin' ? 'Administrador' : 
+                       roleRaw === 'cliente' ? 'Cliente' : roleRaw;
+      
       return `
         <tr>
           <td>${user.id}</td>
           <td>${user.name}</td>
           <td>${user.email}</td>
-          <td><span class="status-badge status-${roleName.toLowerCase()}">${roleName}</span></td>
+          <td><span class="status-badge status-${roleRaw.toLowerCase()}">${roleName}</span></td>
           <td>
             <button class="action-btn edit-user-btn" data-id="${user.id}" data-name="${user.name}" data-email="${user.email}" data-role="${user.role_id}">Editar</button>
             <button class="action-btn delete-user-btn" data-id="${user.id}">Eliminar</button>

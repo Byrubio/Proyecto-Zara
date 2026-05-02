@@ -1,4 +1,4 @@
-# Zara Home - Proyecto Web - Clon
+   # Zara Home - Proyecto Web - Clon
 
 ##  Descripción
 Este proyecto consiste en el desarrollo de una página web inspirada en Zara Home, integrando tanto frontend como backend.
@@ -46,6 +46,18 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
 *  Selección de región (modal)
 *  Gestión de productos (CRUD) mediante API.
 *  Panel de administración (gestión de productos)
+
+---
+
+### Notificaciones y Feedback de Usuario (Notyf)
+Para mejorar la experiencia de usuario (UX) en la respuesta del sistema ante las acciones (añadir al carrito, errores de inicio de sesión, actualizaciones de perfil o panel de administrador), el proyecto integra **Notyf**, una librería de notificaciones tipo "toast" ligera y libre de dependencias.
+
+*   **Implementación**: Integrada de manera global en todas las vistas (`index.html`, `banos.html`, `dashboard.html`, `admin.html`) mediante CDN (jsDelivr).
+*   **Configuración UI**: Se ha sobreescrito la configuración por defecto de Notyf para adaptarla al diseño y _branding_ minimalista de Zara Home:
+    *   **Success**: Color de fondo `#000` (Negro puro) y texto blanco.
+    *   **Error**: Color de fondo `#d9534f` (Granate/Rojo oscuro) y texto blanco.
+    *   **Animaciones**: Deslizamiento vertical desde la parte inferior derecha, con 3 segundos de duración, eliminando iconos genéricos para un aspecto más sobrio.
+*   **Encapsulamiento**: La librería actúa detrás de una función "wrapper" (`showToast(message, type)`) en los archivos `app.js` y `admin.js`, permitiendo un uso estandarizado en todo el código sin acoplar fuertemente la lógica a la sintaxis de la librería.
 
     ---
 
