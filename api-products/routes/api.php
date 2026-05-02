@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
 });
 
 Route::apiResource('products', ProductController::class);

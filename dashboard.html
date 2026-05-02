@@ -15,25 +15,25 @@
     
     <ul class="nav-menu">
       <li class="nav-item">
-        <a href="#" class="nav-link active">
+        <a href="#" class="nav-link active" id="nav-perfil">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Mi Perfil
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" id="nav-pedidos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           Mis Pedidos
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" id="nav-favoritos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           Favoritos
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" id="nav-ayuda">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Ayuda
         </a>
@@ -53,8 +53,8 @@
     </header>
 
     <div class="dashboard-grid">
-      <!-- Tarjeta 1 -->
-      <div class="card">
+      <!-- Tarjeta 1: Pedidos -->
+      <div class="card" id="card-pedidos">
         <div class="card-header">
           <h2 class="card-title">Últimos Pedidos</h2>
           <div class="card-icon">
@@ -68,8 +68,23 @@
         </div>
       </div>
 
-      <!-- Tarjeta 2 -->
-      <div class="card">
+      <!-- Tarjeta 2: Favoritos -->
+      <div class="card" id="card-favoritos">
+        <div class="card-header">
+          <h2 class="card-title">Favoritos</h2>
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+        </div>
+        <div class="card-content" id="favoritesContainer">
+          <p class="empty-state">No tienes artículos guardados como favoritos.</p>
+          <span class="card-number" id="favoritesCount">0</span>
+          <a href="index.html" class="action-link">Ir de compras</a>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3: Direcciones -->
+      <div class="card" id="card-direcciones">
         <div class="card-header">
           <h2 class="card-title">Direcciones</h2>
           <div class="card-icon">
@@ -83,8 +98,8 @@
         </div>
       </div>
 
-      <!-- Tarjeta 3 -->
-      <div class="card">
+      <!-- Tarjeta 4: Datos Personales -->
+      <div class="card" id="card-datos">
         <div class="card-header">
           <h2 class="card-title">Datos Personales</h2>
           <div class="card-icon">
@@ -92,9 +107,31 @@
           </div>
         </div>
         <div class="card-content">
-          Gestiona tu correo de acceso (<span id="userEmail">cargando...</span>) y contraseña para mantener tu cuenta segura.
-          <br/>
-          <a href="#" class="action-link">Modificar Datos</a>
+          <div id="datos-personales-display">
+            Gestiona tu correo de acceso (<span id="userEmail">cargando...</span>) y contraseña para mantener tu cuenta segura.
+            <br/>
+            <a href="#" class="action-link" id="btn-modificar-datos">Modificar Datos</a>
+          </div>
+          
+          <!-- Formulario de modificación (Oculto por defecto) -->
+          <div id="datos-personales-form" style="display: none; margin-top: 15px; text-align: left;">
+            <div style="margin-bottom: 10px;">
+              <label style="display:block; font-size:12px; margin-bottom:5px;">Nombre</label>
+              <input type="text" id="edit-name" style="width:100%; padding:8px; border:1px solid #ccc; font-family:var(--primary-font);">
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label style="display:block; font-size:12px; margin-bottom:5px;">Email</label>
+              <input type="email" id="edit-email" style="width:100%; padding:8px; border:1px solid #ccc; font-family:var(--primary-font);">
+            </div>
+            <div style="margin-bottom: 15px;">
+              <label style="display:block; font-size:12px; margin-bottom:5px;">Nueva Contraseña (Opcional)</label>
+              <input type="password" id="edit-password" placeholder="Dejar en blanco para no cambiar" style="width:100%; padding:8px; border:1px solid #ccc; font-family:var(--primary-font);">
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button id="btn-guardar-datos" style="background:#000; color:#fff; border:none; padding:8px 15px; cursor:pointer; font-size:12px;">GUARDAR</button>
+              <button id="btn-cancelar-datos" style="background:transparent; color:#000; border:1px solid #ccc; padding:8px 15px; cursor:pointer; font-size:12px;">CANCELAR</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -107,7 +144,12 @@
 
       if (!token) {
         window.location.href = "index.html";
-        return;
+      }
+
+      // Mostrar el nombre inmediatamente si está en localStorage para evitar parpadeos
+      const storedName = localStorage.getItem("user_name");
+      if (storedName) {
+        document.getElementById("welcomeMessage").textContent = `Bienvenido, ${storedName}`;
       }
 
       try {
@@ -127,7 +169,7 @@
           return;
         }
 
-        document.getElementById("welcomeMessage").textContent = `¡HOLA, ${data.name.toUpperCase()}!`;
+        document.getElementById("welcomeMessage").textContent = `Bienvenido, ${data.name}`;
         document.getElementById("userEmail").textContent = data.email || 'tu email';
 
         // Si es admin, añadir link al panel
@@ -258,8 +300,201 @@
       } catch (error) {
         console.error("Error:", error);
       }
+
+      // --- Lógica de Favoritos ---
+      const renderFavorites = async () => {
+        try {
+          const favsJSON = localStorage.getItem("zarahome_bath_favorites");
+          const favNames = favsJSON ? JSON.parse(favsJSON) : [];
+          
+          const favContainer = document.getElementById("favoritesContainer");
+          const favCount = document.getElementById("favoritesCount");
+          
+          if (!favNames || favNames.length === 0) {
+            favContainer.innerHTML = `
+              <p class="empty-state">No tienes artículos guardados como favoritos.</p>
+              <span class="card-number" id="favoritesCount">0</span>
+              <a href="index.html" class="action-link">Ir de compras</a>
+            `;
+            return;
+          }
+
+          if (favCount) favCount.textContent = favNames.length;
+
+          // Fetch all products to match the names
+          const prodRes = await fetch("http://127.0.0.1:8000/api/products");
+          const products = await prodRes.json();
+          
+          const favoriteProducts = products.filter(p => favNames.includes(p.nombre));
+          
+          let html = '<div class="favorites-list" style="max-height: 250px; overflow-y: auto; text-align: left; margin-top: 15px;">';
+          favoriteProducts.forEach(prod => {
+            html += `
+              <div style="display: flex; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                <img src="${prod.imagen}" alt="${prod.nombre}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px; border-radius: 4px;">
+                <div style="flex: 1;">
+                  <strong style="display: block; font-size: 0.9em; margin-bottom: 3px;">${prod.nombre}</strong>
+                  <span style="font-size: 0.85em; color: #666;">${Number(prod.precio).toFixed(2)} €</span>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          favContainer.innerHTML = html;
+        } catch (e) {
+          console.error("Error loading favorites:", e);
+        }
+      };
+
+      await renderFavorites();
+
+      // --- Lógica Modificar Datos ---
+      const btnModificar = document.getElementById('btn-modificar-datos');
+      const formDatos = document.getElementById('datos-personales-form');
+      const displayDatos = document.getElementById('datos-personales-display');
+      const btnGuardar = document.getElementById('btn-guardar-datos');
+      const btnCancelar = document.getElementById('btn-cancelar-datos');
+      
+      const editName = document.getElementById('edit-name');
+      const editEmail = document.getElementById('edit-email');
+      const editPassword = document.getElementById('edit-password');
+
+      btnModificar.addEventListener('click', (e) => {
+        e.preventDefault();
+        displayDatos.style.display = 'none';
+        formDatos.style.display = 'block';
+        
+        // Cargar datos actuales
+        const welcomeText = document.getElementById('welcomeMessage').textContent;
+        editName.value = welcomeText.replace('Bienvenido, ', '');
+        editEmail.value = document.getElementById('userEmail').textContent;
+        editPassword.value = '';
+      });
+
+      btnCancelar.addEventListener('click', (e) => {
+        e.preventDefault();
+        formDatos.style.display = 'none';
+        displayDatos.style.display = 'block';
+      });
+
+      // Función auxiliar para Toasts estéticos (igual que en app.js)
+      function showToast(message, type = 'success') {
+        const toast = document.createElement("div");
+        const bgColor = type === 'success' ? '#000' : '#d9534f';
+        toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${bgColor};color:#fff;padding:15px 25px;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-family:var(--primary-font);font-size:13px;z-index:10000;opacity:0;transform:translateY(20px);transition:all 0.3s ease;`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        // Animar entrada
+        setTimeout(() => {
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateY(0)';
+        }, 10);
+        
+        // Animar salida
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(20px)';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      btnGuardar.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const payload = {
+          name: editName.value,
+          email: editEmail.value
+        };
+        if (editPassword.value.trim() !== '') {
+          payload.password = editPassword.value;
+        }
+
+        try {
+          const res = await fetch("http://127.0.0.1:8000/api/user/profile", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token,
+              "Accept": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+          
+          if (res.ok) {
+            const result = await res.json();
+            // Actualizar vista
+            document.getElementById('welcomeMessage').textContent = `Bienvenido, ${result.user.name}`;
+            document.getElementById('userEmail').textContent = result.user.email;
+            localStorage.setItem("user_name", result.user.name);
+            
+            formDatos.style.display = 'none';
+            displayDatos.style.display = 'block';
+            showToast("¡Datos actualizados con éxito!");
+          } else {
+            const errorData = await res.json();
+            showToast("Error: " + (errorData.message || "Verifica los datos"), 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Error de conexión", 'error');
+        }
+      });
+
+      // --- 1. Lógica Sidebar (Pestañas) ---
+      const navLinks = document.querySelectorAll('.nav-link');
+      const cards = {
+        pedidos: document.getElementById('card-pedidos'),
+        favoritos: document.getElementById('card-favoritos'),
+        direcciones: document.getElementById('card-direcciones'),
+        datos: document.getElementById('card-datos')
+      };
+
+      const showCards = (cardsToShow) => {
+        Object.values(cards).forEach(card => card.style.display = 'none');
+        cardsToShow.forEach(card => card.style.display = 'block');
+      };
+
+      document.getElementById('nav-perfil').addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        showCards([cards.pedidos, cards.favoritos, cards.direcciones, cards.datos]);
+      });
+
+      document.getElementById('nav-pedidos').addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        showCards([cards.pedidos]);
+      });
+
+      document.getElementById('nav-favoritos').addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        showCards([cards.favoritos]);
+      });
+
+      document.getElementById('nav-ayuda').addEventListener('click', (e) => {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        // Mostrar algo de ayuda temporalmente
+        showCards([]);
+        let helpCard = document.getElementById('card-help-temp');
+        if (!helpCard) {
+          helpCard = document.createElement('div');
+          helpCard.id = 'card-help-temp';
+          helpCard.className = 'card';
+          helpCard.innerHTML = `<div class="card-header"><h2 class="card-title">Centro de Ayuda</h2></div><div class="card-content">Próximamente... Llámanos al 900 123 456 para cualquier consulta.</div>`;
+          document.querySelector('.dashboard-grid').appendChild(helpCard);
+        }
+        helpCard.style.display = 'block';
+      });
+
     });
 
+    // Cerrar sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("token");
       localStorage.removeItem("auth_user");
