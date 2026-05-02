@@ -759,7 +759,7 @@ body.menu-open {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-lg);
 }
 
@@ -822,7 +822,7 @@ body.menu-open {
     padding: var(--spacing-md);
   }
   .products-grid { 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
   .header-left {
     gap: var(--spacing-md);
