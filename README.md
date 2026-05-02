@@ -52,15 +52,17 @@ El objetivo ha sido simular un entorno real de desarrollo web completo (full-sta
   ## Estructura del proyecto
 
 ```
-/proyecto
-│
-├── /css
-├── /js
-├── /images
-├── index.html
-├── banos.html
-├── admin.html (opcional)
-└── README.md
+/api-products
+/css
+/data
+/img
+/js
+README.md
+admin.html
+banos.html
+dashboard.html
+index.html
+
 ```
 ---
 ## Guía de Desarrollo - API de Productos
@@ -160,9 +162,13 @@ Se ha utilizado SonarQube Cloud para:
 
 ##  Mejoras futuras
 
-* Base de datos real
+* Página de detalle de producto
 * Sistema de pagos
-* Autenticación avanzada
+* Autenticación avanzada(roles,permisos,recuperación de contraseña)
+* Panel de administración completo (categorías, usuarios, pedidos)
+* Filtros avanzados (precio, color, tamaño)
+* Optimización responsive para más dispositivos
+* Mejora del rendimiento y carga de imágenes
 
 ---
 

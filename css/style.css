@@ -477,7 +477,8 @@ body.menu-open {
   display: flex;
 }
 .search-overlay input {
-  width: 400px;   
+  width: 90%; 
+  max-width: 400px;
   height: 40px;   
   font-size: 16px; 
   padding: 10px;
@@ -758,7 +759,7 @@ body.menu-open {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-lg);
 }
 
@@ -820,7 +821,9 @@ body.menu-open {
   .header {
     padding: var(--spacing-md);
   }
-
+  .products-grid { 
+  grid-template-columns: repeat(4, 1fr);
+}
   .header-left {
     gap: var(--spacing-md);
   }
@@ -853,6 +856,7 @@ body.menu-open {
 
 @media (max-width: 480px) {
   .hero-nav-link {
+    gap:16px;
     padding: var(--spacing-md) var(--spacing-md);
     font-size: 0.65rem;
   }
