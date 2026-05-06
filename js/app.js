@@ -299,8 +299,23 @@ function initAuthSystem() {
   const switchToLogin = document.getElementById("switchToLogin");
 
   // 1. Actualizar estado visual inicial
-  const token = localStorage.getItem("token");
-  const isAdmin = localStorage.getItem("is_admin") === "true";
+  let token = localStorage.getItem("token");
+  let isAdmin = localStorage.getItem("is_admin") === "true";
+  let userEmail = localStorage.getItem("user_email") || "";
+
+  // Si tenemos token pero faltan datos, intentar recuperarlos
+  if (token && (!userEmail || localStorage.getItem("is_admin") === null)) {
+    fetch(`${API_URL}/user`, {
+      headers: { "Authorization": `Bearer ${token}`, "Accept": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+      localStorage.setItem("user_email", data.email);
+      localStorage.setItem("is_admin", data.role_id === 2 ? "true" : "false");
+      window.location.reload(); // Recargar para aplicar cambios
+    })
+    .catch(err => console.error("Error recuperando datos de usuario:", err));
+  }
 
   if (token && loginBtn) {
     loginBtn.innerHTML = `Mi Cuenta <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/></svg>`;
@@ -309,16 +324,30 @@ function initAuthSystem() {
       window.location.href = "dashboard.html";
     };
 
-    // Si es admin, añadir el botón especial
-    if (isAdmin && !document.getElementById("adminLinkHeader")) {
+    // Si tiene correo corporativo, añadir el botón especial
+    const userEmail = localStorage.getItem("user_email") || "";
+    if (userEmail.toLowerCase().endsWith("@zarahome.com") && !document.getElementById("adminLinkHeader")) {
       const adminBtn = document.createElement("button");
       adminBtn.id = "adminLinkHeader";
       adminBtn.className = "header-icon";
       adminBtn.style.marginRight = "15px";
       adminBtn.style.fontWeight = "bold";
-      adminBtn.innerHTML = `Admin <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+      adminBtn.innerHTML = `PANEL ADMIN <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
       adminBtn.onclick = () => window.location.href = "admin.html";
-      loginBtn.parentNode.insertBefore(adminBtn, loginBtn);
+      
+      const headerRight = document.querySelector(".header-right");
+      if (headerRight) {
+        headerRight.prepend(adminBtn);
+      }
+
+      // También añadirlo al menú hamburguesa para móviles/escritorio
+      const dropdownList = document.querySelector(".dropdown-list");
+      if (dropdownList && !document.getElementById("adminLinkMenu")) {
+        const adminLi = document.createElement("li");
+        adminLi.id = "adminLinkMenu";
+        adminLi.innerHTML = `<a href="admin.html" style="font-weight: bold; color: #000;">PANEL DE ADMINISTRACIÓN</a>`;
+        dropdownList.prepend(adminLi);
+      }
     }
   }
 
@@ -395,13 +424,10 @@ function initAuthSystem() {
         }
         localStorage.setItem("token", data.token);
         localStorage.setItem("user_name", data.user.name);
+        localStorage.setItem("user_email", data.user.email);
         localStorage.setItem("is_admin", data.isAdmin ? "true" : "false");
         closeAuthModal();
-        if (data.isAdmin) {
-          window.location.href = "admin.html";
-        } else {
-          window.location.href = "dashboard.html";
-        }
+        window.location.href = "dashboard.html";
       } catch (err) {
         if (errorDiv) {
           errorDiv.textContent = "Error de conexión. ¿Arrancaste php artisan serve?";
@@ -474,20 +500,31 @@ function initAuthSystem() {
 // GESTIÓN DE PRODUCTOS (API)
 // ==========================================
 function cargarProductosBano() {
-  console.log("Iniciando carga de productos de baño...");
-  fetch("data/banos.json")
+  console.log("Iniciando carga de productos desde la API...");
+  fetch(`${API_URL}/products`)
     .then((res) => {
-      console.log("Respuesta del fetch:", res);
-      if (!res.ok) throw new Error("No se encuentra el JSON");
+      if (!res.ok) throw new Error("Error al conectar con la API");
       return res.json();
     })
     .then((productos) => {
-      console.log("Productos cargados:", productos.length);
-      allBathProducts = productos;
-      renderBathProducts(productos);
+      // Filtrar por categoría "Baños" (ID 1)
+      const productosBano = productos.filter(p => Number(p.category_id) === 1);
+      console.log("Productos de baño cargados:", productosBano.length);
+      allBathProducts = productosBano;
+      renderBathProducts(productosBano);
       initBathSearchAndFilters();
     })
-    .catch((err) => console.error("Error cargando productos:", err));
+    .catch((err) => {
+      console.error("Error cargando productos de la API:", err);
+      // Fallback a JSON local si la API falla
+      fetch("data/banos.json")
+        .then(res => res.json())
+        .then(productos => {
+          allBathProducts = productos;
+          renderBathProducts(productos);
+          initBathSearchAndFilters();
+        });
+    });
 }
 
 // Gestión de vistas (2, 3, 4 columnas)
@@ -547,11 +584,11 @@ function renderBathProducts(productArray) {
         <button class="wishlist-btn ${heartClass}" title="Añadir a favoritos" data-product-id="${product.id}" data-product-name="${product.nombre}">
            &#9825;
         </button>
-        <img src="${product.imagen}" alt="${product.nombre}" class="producto-imagen">
+        <img src="${product.imagen || './img/placeholder.png'}" alt="${product.nombre}" class="producto-imagen">
       </div>
       <div class="info">
         <h3>${product.nombre}</h3>
-        <p class="precio">${product.precio.toFixed(2)} €</p>
+        <p class="precio">${Number(product.precio).toFixed(2)} €</p>
         <button class="add-cart-btn" data-product-id="${product.id}" data-product-name="${product.nombre}" data-product-price="${product.precio}">
           Añadir al carrito
         </button>

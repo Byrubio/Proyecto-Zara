@@ -19,6 +19,7 @@
     <a href="index.html" class="admin-logo">ZARA HOME</a>
     <ul class="admin-nav">
       <li class="admin-nav-item active" data-tab="users">Usuarios</li>
+      <li class="admin-nav-item" data-tab="products">Productos</li>
       <li class="admin-nav-item" data-tab="orders">Pedidos</li>
       <li class="admin-nav-item" data-tab="customers">Clientes</li>
     </ul>
@@ -49,6 +50,31 @@
           </tr>
         </thead>
         <tbody id="usersTableBody">
+          <!-- Dinámico -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab Productos -->
+    <div id="tab-products" class="tab-panel">
+      <div class="admin-header">
+        <h1 class="admin-title">Gestión de Productos</h1>
+        <div class="admin-actions">
+          <button id="createProductBtn">+ Nuevo Producto</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="productsTableBody">
           <!-- Dinámico -->
         </tbody>
       </table>
@@ -149,6 +175,39 @@
         <div class="modal-actions">
           <button type="button" class="btn-cancel" id="closeCustomerModal">Cancelar</button>
           <button type="submit" class="btn-submit">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal UI for Creating/Editing Products -->
+  <div class="admin-modal-overlay" id="productModal">
+    <div class="admin-modal">
+      <h2 style="font-family: 'Cormorant Garamond';font-size:24px;margin-bottom:20px;text-align:left;">Producto</h2>
+      <form id="productForm">
+        <input type="hidden" id="productId" />
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="productName" required placeholder="Ej: Jabón de Manos">
+        </div>
+        <div class="form-group">
+          <label>Precio (€)</label>
+          <input type="number" step="0.01" id="productPrice" required placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Imagen (URL)</label>
+          <input type="text" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
+        </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="productCategory">
+            <option value="">Sin categoría</option>
+            <!-- Llenado dinámico -->
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="closeProductModal">Cancelar</button>
+          <button type="submit" class="btn-submit">Guardar</button>
         </div>
       </form>
     </div>

@@ -174,7 +174,7 @@
         document.getElementById("userEmail").textContent = data.email || 'tu email';
 
         // Si es admin, añadir link al panel
-        const isAdmin = data.role_id === 1; // Assuming 1 is admin based on RoleSeeder
+        const isAdmin = (data.role_id === 2) || (data.email && data.email.toLowerCase().endsWith("@zarahome.com"));
         localStorage.setItem("is_admin", isAdmin ? "true" : "false");
 
         if (isAdmin) {
@@ -502,6 +502,8 @@
     // Cerrar sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("token");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("is_admin");
       localStorage.removeItem("auth_user");
       localStorage.removeItem("auth_token");
       window.location.href = "index.html";

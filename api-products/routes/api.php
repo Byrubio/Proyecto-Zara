@@ -41,4 +41,12 @@ Route::middleware(['auth:sanctum', IsAdmin::class])->prefix('admin')->group(func
     
     Route::get('/customers', [AdminController::class, 'indexCustomers']);
     Route::put('/customers/{id}', [AdminController::class, 'updateCustomer']);
+
+    // Admin Product Management
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+    
+    // Categories for selection
+    Route::get('/categories', [\App\Http\Controllers\CategoryController::class, 'index']);
 });

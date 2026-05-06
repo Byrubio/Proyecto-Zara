@@ -1,20 +1,37 @@
 const API_URL = "http://127.0.0.1:8000/api";
 const token = localStorage.getItem("token");
 
-if (!token) {
-  window.location.href = "index.html";
-}
-
 document.addEventListener("DOMContentLoaded", () => {
+  checkAdminAccess();
   initTabs();
   loadData();
   initUserModal();
   initCustomerModal();
+  initProductModal();
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
     window.location.href = "index.html";
   });
 });
+
+function checkAdminAccess() {
+  const email = (localStorage.getItem("user_email") || "").toLowerCase();
+  const isAdmin = localStorage.getItem("is_admin") === "true";
+
+  // Permitir acceso si es admin en DB O si tiene el correo de la empresa
+  if (!token || (!isAdmin && !email.endsWith("@zarahome.com"))) {
+    // Usar Notyf si está disponible, si no alert normal
+    if (typeof notyf !== "undefined") {
+      notyf.error("Acceso denegado. Solo personal de @zarahome.com");
+    } else {
+      alert("Acceso denegado. Solo personal de @zarahome.com");
+    }
+    
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+  }
+}
 
 // UI Helper (reusing from app.js logic basically)
 // Configurar Notyf
@@ -94,8 +111,10 @@ let rolesData = [];
 async function loadData() {
   await fetchRoles();
   fetchUsers();
+  fetchProducts();
   fetchOrders();
   fetchCustomers();
+  fetchCategories();
 }
 
 async function f(endpoint, options = {}) {
@@ -164,6 +183,46 @@ async function fetchUsers() {
     }).join("");
 
     bindUserActions();
+  }
+}
+
+// ==== PRODUCTS ====
+async function fetchProducts() {
+  const res = await fetch(`${API_URL}/products`); // Products are public GET
+  if (res && res.ok) {
+    const products = await res.json();
+    const tbody = document.getElementById("productsTableBody");
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td>${p.id}</td>
+        <td><img src="${p.imagen}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" alt="${p.nombre}"></td>
+        <td>${p.nombre}</td>
+        <td>${Number(p.precio).toFixed(2)} €</td>
+        <td>${p.category ? p.category.name : 'N/A'}</td>
+        <td>
+          <button class="action-btn edit-product-btn" 
+            data-id="${p.id}" 
+            data-nombre="${p.nombre}" 
+            data-precio="${p.precio}" 
+            data-imagen="${p.imagen || ''}" 
+            data-category="${p.category_id || ''}">Editar</button>
+          <button class="action-btn delete-product-btn" data-id="${p.id}">Eliminar</button>
+        </td>
+      </tr>
+    `).join("");
+
+    bindProductActions();
+  }
+}
+
+async function fetchCategories() {
+  const res = await f('categories');
+  if (res && res.ok) {
+    const categories = await res.json();
+    const select = document.getElementById("productCategory");
+    let html = '<option value="">Sin categoría</option>';
+    html += categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    select.innerHTML = html;
   }
 }
 
@@ -385,6 +444,83 @@ function bindCustomerActions() {
       document.getElementById("customerPhone").value = phone;
       document.getElementById("customerAddress").value = address;
       customerModal.classList.add("active");
+    });
+  });
+}
+
+// ==== PRODUCT MODAL & ACTIONS ====
+const productModal = document.getElementById("productModal");
+const productForm = document.getElementById("productForm");
+
+function initProductModal() {
+  document.getElementById("createProductBtn").addEventListener("click", () => {
+    productForm.reset();
+    document.getElementById("productId").value = "";
+    productModal.classList.add("active");
+  });
+
+  document.getElementById("closeProductModal").addEventListener("click", () => {
+    productModal.classList.remove("active");
+  });
+
+  productForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("productId").value;
+    const isEditing = !!id;
+
+    const payload = {
+      nombre: document.getElementById("productName").value,
+      precio: document.getElementById("productPrice").value,
+      imagen: document.getElementById("productImage").value,
+      category_id: document.getElementById("productCategory").value || null
+    };
+
+    const endpoint = isEditing ? `products/${id}` : `products`;
+    const method = isEditing ? 'PUT' : 'POST';
+
+    const res = await f(endpoint, {
+      method: method,
+      body: JSON.stringify(payload)
+    });
+
+    if (res && res.ok) {
+      showToast(`Producto ${isEditing ? 'actualizado' : 'creado'} con éxito`);
+      productModal.classList.remove("active");
+      fetchProducts();
+    } else if (res) {
+      const data = await res.json();
+      showToast("Error: " + (data.message || 'Error al guardar producto'));
+    }
+  });
+}
+
+function bindProductActions() {
+  document.querySelectorAll(".edit-product-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const { id, nombre, precio, imagen, category } = e.target.dataset;
+      document.getElementById("productId").value = id;
+      document.getElementById("productName").value = nombre;
+      document.getElementById("productPrice").value = precio;
+      document.getElementById("productImage").value = imagen;
+      document.getElementById("productCategory").value = category;
+      productModal.classList.add("active");
+    });
+  });
+
+  document.querySelectorAll(".delete-product-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const confirmed = await showConfirmCustom("¿Seguro que deseas eliminar este producto?");
+      if (confirmed) {
+        const id = e.target.dataset.id;
+        const res = await f(`products/${id}`, { method: 'DELETE' });
+        if (res && res.ok) {
+          showToast("Producto eliminado");
+          fetchProducts();
+        } else if (res) {
+          const data = await res.json();
+          showToast("Error: " + data.message);
+        }
+      }
     });
   });
 }

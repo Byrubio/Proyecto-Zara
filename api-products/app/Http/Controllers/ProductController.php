@@ -33,4 +33,33 @@ class ProductController extends Controller
         $product = Product::create($validated);
         return response()->json($product, 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'nombre' => 'sometimes|required|string',
+            'precio' => 'sometimes|required|numeric',
+            'imagen' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
+
+        $product->update($validated);
+        return response()->json($product);
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        $product->delete();
+        return response()->json(['message' => 'Product deleted']);
+    }
 }
