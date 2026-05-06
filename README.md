@@ -131,7 +131,7 @@ Todos los endpoints de la API están prefijados con `/api`. Las respuestas se en
 ### Pasos:
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com
+   git clone https://github.com/Byrubio/Proyecto-Zara.git
    cd Proyecto-Zara
    ```
 2. **Configuración automática:**
