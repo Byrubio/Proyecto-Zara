@@ -115,6 +115,8 @@ Todos los endpoints de la API están prefijados con `/api`. Las respuestas se en
 * PHP 8.2+ y Composer
 
 ### Pasos:
+1.  Crea una base de datos en blanco en phpMyAdmin
+3.  Renombra el archivo .env.example a .env y configura las credenciales de tu base de datos (DB_DATABASE, DB_USERNAME, etc.).
 1. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/Byrubio/Proyecto-Zara.git
