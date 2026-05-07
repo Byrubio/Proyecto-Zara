@@ -68,16 +68,17 @@ index.html
 ```
 ---
 ## Guía de Desarrollo - API de Productos
-Esta sección detalla los paquetes utilizados y los puntos de acceso para interactuar con los datos.
+Esta sección describe cómo funciona la API del proyecto y los puntos de acceso disponibles para interactuar con los datos.
 
-##  Paquetes y Tecnologías Usadas
+##  Arquitectura de la API
+La API está construida sobre Laravel 12 y expone endpoints REST para:
 
-Se han utilizado las siguientes librerías de la comunidad Laravel para agilizar el desarrollo:
+* Autenticación
 
-**Backend**
-*   **Laravel 12:** Framework base del proyecto.
-*   **PHP 8.2**
-  
+* Gestión de productos (CRUD)
+
+* Obtención de datos en formato JSON
+
 ---
 
 ##  Definición de Endpoints (API)
