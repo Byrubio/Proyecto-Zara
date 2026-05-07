@@ -71,7 +71,7 @@ index.html
 Esta sección describe cómo funciona la API del proyecto y los puntos de acceso disponibles para interactuar con los datos.
 
 ##  Arquitectura de la API
-La API está construida sobre Laravel 12 y expone endpoints REST para:
+La API está construida sobre Laravel 12 y expone endpoints REST para autenticación y gestión de productos.
 
 ---
 
@@ -111,7 +111,7 @@ Todos los endpoints de la API están prefijados con `/api`. Las respuestas se en
 
 ### Pasos:
 1.  Crea una base de datos en blanco en phpMyAdmin
-2.  Renombra el archivo .env.example a .env y configura las credenciales de tu base de datos (DB_DATABASE, DB_USERNAME, etc.).
+2.  Renombra el archivo .env.example a .env y configura las credenciales de tu base de datos   (DB_DATABASE, DB_USERNAME, etc.).
 3. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/Byrubio/Proyecto-Zara.git
