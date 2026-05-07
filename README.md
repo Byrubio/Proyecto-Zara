@@ -73,12 +73,6 @@ Esta sección describe cómo funciona la API del proyecto y los puntos de acceso
 ##  Arquitectura de la API
 La API está construida sobre Laravel 12 y expone endpoints REST para:
 
-* Autenticación
-
-* Gestión de productos (CRUD)
-
-* Obtención de datos en formato JSON
-
 ---
 
 ##  Definición de Endpoints (API)
