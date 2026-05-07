@@ -7,6 +7,15 @@
   <link rel="icon" type="image/png" href="https://ext.same-assets.com/1847217613/1510441429.png" />
   <link rel="stylesheet" href="./css/dashboard.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <style>
+    .remove-favorite-btn:hover {
+      color: #000 !important;
+      transform: scale(1.1);
+    }
+    .remove-favorite-btn {
+      transition: all 0.2s ease;
+    }
+  </style>
 </head>
 <body>
 
@@ -304,12 +313,12 @@
 
       // --- Lógica de Favoritos ---
       const renderFavorites = async () => {
+        const favContainer = document.getElementById("favoritesContainer");
+        const favCount = document.getElementById("favoritesCount");
+
         try {
           const favsJSON = localStorage.getItem("zarahome_bath_favorites");
           const favNames = favsJSON ? JSON.parse(favsJSON) : [];
-          
-          const favContainer = document.getElementById("favoritesContainer");
-          const favCount = document.getElementById("favoritesCount");
           
           if (!favNames || favNames.length === 0) {
             favContainer.innerHTML = `
@@ -317,33 +326,59 @@
               <span class="card-number" id="favoritesCount">0</span>
               <a href="index.html" class="action-link">Ir de compras</a>
             `;
+            if (favCount) favCount.textContent = "0";
             return;
           }
 
           if (favCount) favCount.textContent = favNames.length;
 
-          // Fetch all products to match the names
+          // Fetch products
           const prodRes = await fetch("http://127.0.0.1:8000/api/products");
+          if (!prodRes.ok) throw new Error("No se pudieron cargar los productos");
           const products = await prodRes.json();
           
           const favoriteProducts = products.filter(p => favNames.includes(p.nombre));
           
+          if (favoriteProducts.length === 0) {
+            favContainer.innerHTML = `
+              <p class="empty-state">Tus favoritos antiguos ya no están disponibles en el catálogo actual.</p>
+              <a href="banos.html" class="action-link">Ver novedades</a>
+            `;
+            return;
+          }
+
           let html = '<div class="favorites-list" style="max-height: 250px; overflow-y: auto; text-align: left; margin-top: 15px;">';
           favoriteProducts.forEach(prod => {
             html += `
-              <div style="display: flex; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
-                <img src="${prod.imagen}" alt="${prod.nombre}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px; border-radius: 4px;">
+              <div class="favorite-item" style="display: flex; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                <img src="${prod.imagen || './img/placeholder.png'}" alt="${prod.nombre}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px; border-radius: 4px;">
                 <div style="flex: 1;">
                   <strong style="display: block; font-size: 0.9em; margin-bottom: 3px;">${prod.nombre}</strong>
                   <span style="font-size: 0.85em; color: #666;">${Number(prod.precio).toFixed(2)} €</span>
                 </div>
+                <button class="remove-favorite-btn" data-name="${prod.nombre}" style="background: none; border: none; cursor: pointer; color: #999; padding: 5px;" title="Eliminar de favoritos">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
               </div>
             `;
           });
           html += '</div>';
           favContainer.innerHTML = html;
+
+          // Event listeners para eliminar
+          document.querySelectorAll('.remove-favorite-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const nameToRemove = e.currentTarget.dataset.name;
+              let currentFavs = JSON.parse(localStorage.getItem("zarahome_bath_favorites") || "[]");
+              currentFavs = currentFavs.filter(name => name !== nameToRemove);
+              localStorage.setItem("zarahome_bath_favorites", JSON.stringify(currentFavs));
+              renderFavorites(); // Re-renderizar
+              if (typeof showToast === 'function') showToast("Eliminado de favoritos");
+            });
+          });
         } catch (e) {
           console.error("Error loading favorites:", e);
+          favContainer.innerHTML = `<p class="empty-state">Error al cargar favoritos. Verifica la conexión con el servidor.</p>`;
         }
       };
 
