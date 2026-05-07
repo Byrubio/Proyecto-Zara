@@ -116,18 +116,18 @@ Todos los endpoints de la API están prefijados con `/api`. Las respuestas se en
 
 ### Pasos:
 1.  Crea una base de datos en blanco en phpMyAdmin
-3.  Renombra el archivo .env.example a .env y configura las credenciales de tu base de datos (DB_DATABASE, DB_USERNAME, etc.).
-1. **Clonar el repositorio:**
+2.  Renombra el archivo .env.example a .env y configura las credenciales de tu base de datos (DB_DATABASE, DB_USERNAME, etc.).
+3. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/Byrubio/Proyecto-Zara.git
    cd Proyecto-Zara
    ```
-2. **Configuración automática:**
+4. **Configuración automática:**
    Ejecuta este comando para configurar todo el sistema de golpe:
    ```bash
    composer run setup
    ```
-3. **Iniciar el proyecto:**
+5. **Iniciar el proyecto:**
    Para arrancar tanto el servidor de Laravel como el de Vite (frontend):
    ```bash
    composer run dev
